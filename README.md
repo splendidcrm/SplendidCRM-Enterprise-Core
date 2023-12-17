@@ -8,14 +8,12 @@ SplendidCRM Enterprise Core is beta software.  It has not been fully regression 
 ## Get Started
 The quickest way to get started is to request our installer. The installer will do practically everything you need to get a SplendidCRM Enterprise Core site up and running, with the exception of installing SQL Server Express. Or, you can download the latest from GitHub and build the app yourself.
 
-You can also use Docker to get started.  We have provided a composer file that will create an instance of SQL Server 2022 to get you going quickly.
-
 ## Minimum Requirements
 1. Windows 10 or higher, Windows Server 2016 or higher.
 2. ASP.NET Core 6.0 Hosting Bundle. Download [ASP.NET Core 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0 "ASP.NET Core 6.0")
 3. Visual Studio 2022 Community or higher. Download [Visual Studio 2022](https://visualstudio.microsoft.com/downloads/ "Visual Studio 2022")
 4. SQL Server Express 2008 or higher. Download [SQL Server Express 2022](https://www.microsoft.com/en-gb/download/details.aspx?id=104781 "SQL Server Express 2022")
-5. SQL Server Management Studio. Download [SQL Server Management Studio 18.10](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver15 "SQL Server Management Studio 18.10")
+5. SQL Server Management Studio. Download [SQL Server Management Studio 19.2](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver15 "SQL Server Management Studio 19.2")
 6. Node version 16.20 for Windows 64-bit. Download [Node 16.20](https://nodejs.org/en/download/ "Node 16.20")
 7. Yarn version 1.22. Download using npm: "npm install --global yarn"
 
