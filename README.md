@@ -14,7 +14,7 @@ You can also use Docker to get started.  We have provided a composer file that w
 1. Windows 10 or higher, Windows Server 2016 or higher.
 2. ASP.NET Core 6.0 Hosting Bundle. Download [ASP.NET Core 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0 "ASP.NET Core 6.0")
 3. Visual Studio 2022 Community or higher. Download [Visual Studio 2022](https://visualstudio.microsoft.com/downloads/ "Visual Studio 2022")
-4. SQL Server Express 2008 or higher. Download [SQL Server Express 2019](https://www.microsoft.com/en-us/download/details.aspx?id=101064 "SQL Server Express 2019")
+4. SQL Server Express 2008 or higher. Download [SQL Server Express 2022](https://www.microsoft.com/en-gb/download/details.aspx?id=104781 "SQL Server Express 2022")
 5. SQL Server Management Studio. Download [SQL Server Management Studio 18.10](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver15 "SQL Server Management Studio 18.10")
 6. Node version 16.20 for Windows 64-bit. Download [Node 16.20](https://nodejs.org/en/download/ "Node 16.20")
 7. Yarn version 1.22. Download using npm: "npm install --global yarn"
