@@ -1,0 +1,1 @@
+-- 09/24/2023 Paul.  Change file name from spCONTRACTS_UpdateStage.1.sql to spCONTRACTS_UpdateStatus.1.sql

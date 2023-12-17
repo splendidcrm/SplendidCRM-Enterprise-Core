@@ -1,0 +1,43 @@
+/**********************************************************************************************************************
+ * SplendidCRM is a Customer Relationship Management program created by SplendidCRM Software, Inc. 
+ * Copyright (C) 2005-2023 SplendidCRM Software, Inc. All rights reserved.
+ *
+ * Any use of the contents of this file are subject to the SplendidCRM Enterprise Source Code License 
+ * Agreement, or other written agreement between you and SplendidCRM ("License"). By installing or 
+ * using this file, you have unconditionally agreed to the terms and conditions of the License, 
+ * including but not limited to restrictions on the number of users therein, and you may not use this 
+ * file except in compliance with the License. 
+ * 
+ * SplendidCRM owns all proprietary rights, including all copyrights, patents, trade secrets, and 
+ * trademarks, in and to the contents of this file.  You will not link to or in any way combine the 
+ * contents of this file or any derivatives with any Open Source Code in any manner that would require 
+ * the contents of this file to be made available to any third party. 
+ * 
+ *********************************************************************************************************************/
+-- 09/06/2005 Paul.  Allow nulls in CATEGORY.
+-- 12/17/2005 Paul.  SugarCRM defaults exceed 32 chars. 
+-- 09/09/2005 Paul.  Allow nulls in VALUE because we treat empty strings as null. 
+-- 09/15/2009 Paul.  Convert data type to nvarchar(max) to support Azure. 
+-- 10/28/2009 Paul.  Add UTC date to allow this table to sync. 
+if not exists (select * from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'CONFIG' and TABLE_TYPE = 'BASE TABLE')
+  begin
+	print 'Create Table dbo.CONFIG';
+	Create Table dbo.CONFIG
+		( ID                                 uniqueidentifier not null default(newid()) constraint PK_CONFIG primary key
+		, DELETED                            bit not null default(0)
+		, CREATED_BY                         uniqueidentifier null
+		, DATE_ENTERED                       datetime not null default(getdate())
+		, MODIFIED_USER_ID                   uniqueidentifier null
+		, DATE_MODIFIED                      datetime not null default(getdate())
+		, DATE_MODIFIED_UTC                  datetime null default(getutcdate())
+
+		, CATEGORY                           nvarchar(32) null
+		, NAME                               nvarchar(60) not null
+		, VALUE                              nvarchar(max) null
+		)
+
+	create index IDX_CONFIG_CATEGORY on dbo.CONFIG (CATEGORY)
+  end
+GO
+
+

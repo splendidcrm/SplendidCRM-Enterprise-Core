@@ -1,0 +1,4 @@
+if exists (select * from INFORMATION_SCHEMA.VIEWS where TABLE_NAME = 'vwCONTACTS_DIRECTREPORTS')
+	Drop View dbo.vwCONTACTS_DIRECTREPORTS;
+GO
+

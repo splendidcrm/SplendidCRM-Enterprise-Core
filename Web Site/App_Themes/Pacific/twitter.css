@@ -1,0 +1,88 @@
+/**********************************************************************************************************************
+ * SplendidCRM is a Customer Relationship Management program created by SplendidCRM Software, Inc. 
+ * Copyright (C) 2005-2023 SplendidCRM Software, Inc. All rights reserved.
+ *
+ * Any use of the contents of this file are subject to the SplendidCRM Enterprise Source Code License 
+ * Agreement, or other written agreement between you and SplendidCRM ("License"). By installing or 
+ * using this file, you have unconditionally agreed to the terms and conditions of the License, 
+ * including but not limited to restrictions on the number of users therein, and you may not use this 
+ * file except in compliance with the License. 
+ * 
+ * SplendidCRM owns all proprietary rights, including all copyrights, patents, trade secrets, and 
+ * trademarks, in and to the contents of this file.  You will not link to or in any way combine the 
+ * contents of this file or any derivatives with any Open Source Code in any manner that would require 
+ * the contents of this file to be made available to any third party. 
+ * 
+ * IN NO EVENT SHALL SPLENDIDCRM BE RESPONSIBLE FOR ANY DAMAGES OF ANY KIND, INCLUDING ANY DIRECT, 
+ * SPECIAL, PUNITIVE, INDIRECT, INCIDENTAL OR CONSEQUENTIAL DAMAGES.  Other limitations of liability 
+ * and disclaimers set forth in the License. 
+ * 
+ *********************************************************************************************************************/
+.twitter-stream
+{
+	font-size: 12px;
+}
+.twitter-stream-items
+{
+	list-style: none;
+}
+.twitter-stream-item
+{
+}
+.twitter-stream-item-tweet
+{
+	position: relative;
+	padding: 9px 12px;
+	border-bottom: 1px solid #e8e8e8;
+	min-height: 51px;
+}
+.twitter-stream-item-header
+{
+}
+.twitter-stream-item-header-username
+{
+}
+.twitter-stream-item-header-avatar
+{
+	float: left;
+	margin-top: 3px;
+	margin-left: -58px;
+	width: 48px;
+	height: 48px;
+	border-radius: 5px;
+}
+a.twitter-stream-item-header-fullname
+{
+	font-size: 14px;
+	font-weight: bold;
+	color: #333;
+	text-decoration: none;
+}
+a.twitter-stream-item-header-screenname
+{
+	padding-left: 4px;
+	color: #999;
+	text-decoration: none;
+}
+.twitter-stream-item-header-time
+{
+	position: relative;
+	float: right;
+	margin-top: 1px;
+}
+a.twitter-stream-item-header-timestamp
+{
+	color: #bbb;
+	text-decoration: none;
+}
+.twitter-stream-item-tweet-text
+{
+	white-space: pre-wrap;
+	word-wrap: break-word;
+}
+.twitter-stream-item-footer
+{
+	font-size: 10px;
+	padding-top: 3px;
+}
+

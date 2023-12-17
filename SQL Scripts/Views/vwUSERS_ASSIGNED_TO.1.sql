@@ -1,0 +1,46 @@
+if exists (select * from INFORMATION_SCHEMA.VIEWS where TABLE_NAME = 'vwUSERS_ASSIGNED_TO')
+	Drop View dbo.vwUSERS_ASSIGNED_TO;
+GO
+
+
+/**********************************************************************************************************************
+ * SplendidCRM is a Customer Relationship Management program created by SplendidCRM Software, Inc. 
+ * Copyright (C) 2005-2023 SplendidCRM Software, Inc. All rights reserved.
+ *
+ * Any use of the contents of this file are subject to the SplendidCRM Enterprise Source Code License 
+ * Agreement, or other written agreement between you and SplendidCRM ("License"). By installing or 
+ * using this file, you have unconditionally agreed to the terms and conditions of the License, 
+ * including but not limited to restrictions on the number of users therein, and you may not use this 
+ * file except in compliance with the License. 
+ * 
+ * SplendidCRM owns all proprietary rights, including all copyrights, patents, trade secrets, and 
+ * trademarks, in and to the contents of this file.  You will not link to or in any way combine the 
+ * contents of this file or any derivatives with any Open Source Code in any manner that would require 
+ * the contents of this file to be made available to any third party. 
+ * 
+ *********************************************************************************************************************/
+-- 03/06/2006 Paul.  Oracle does not like <> ''.  Use len() > 0 instead. 
+-- 12/04/2006 Paul.  Only include active users. 
+-- 12/05/2006 Paul.  New users created via NTLM will have a status of NULL. 
+-- 03/05/2009 Paul.  A Portal user should not be assignable. 
+-- 08/02/2016 Paul.  This view will be used to get round-robin users to assign to a process. 
+Create View dbo.vwUSERS_ASSIGNED_TO
+as
+select ID
+     , USER_NAME
+     , DATE_ENTERED
+  from USERS
+ where USER_NAME is not null
+   and len(USER_NAME) > 0
+   and (STATUS is null or STATUS = N'Active')
+   and (PORTAL_ONLY is null or PORTAL_ONLY = 0)
+   and DELETED = 0
+
+GO
+
+Grant Select on dbo.vwUSERS_ASSIGNED_TO to public;
+GO
+
+
+
+

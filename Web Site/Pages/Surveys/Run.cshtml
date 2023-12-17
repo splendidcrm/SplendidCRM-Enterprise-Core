@@ -1,0 +1,166 @@
+﻿@page "/Surveys/run.aspx"
+@using SplendidCRM.Pages.Surveys
+@model RunModel
+<!doctype html>
+<html lang="en">
+<head>
+	<title>@Model.L10n.Term(".moduleList.Surveys")</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, target-densitydpi=device-dpi" />
+	<link type="text/css" rel="stylesheet" href="~/Surveys/stylesheet.aspx?ID=@Model.gSURVEY_THEME_ID.ToString()" id="@Model.gSURVEY_THEME_ID.ToString().Replace("-", "_")" />
+	<link type="text/css" rel="stylesheet" href="~/Include/javascript/jquery-ui-1.9.1.custom.css" />
+	<script type="text/javascript" src="@Url.Content("/Include/javascript/jquery-1.9.1.min.js"                  )"></script>
+	<script type="text/javascript" src="@Url.Content("/Include/javascript/jquery-ui-1.9.1.custom.js"            )"></script>
+	<script type="text/javascript" src="@Url.Content("/Include/javascript/json2.min.js"                         )"></script>
+
+	<script type="text/javascript" src="@Url.Content("/html5/jQuery/jquery-ui-timepicker-addon.js"              )"></script>
+	<script type="text/javascript" src="@Url.Content("/html5/jQuery/jquery.paging.min.js"                       )"></script>
+	<script type="text/javascript" src="@Url.Content("/html5/JSON.js"                                           )"></script>
+	<script type="text/javascript" src="@Url.Content("/html5/Utility.js"                                        )"></script>
+	<script type="text/javascript" src="@Url.Content("/html5/md5.js"                                            )"></script>
+	<script type="text/javascript" src="@Url.Content("/html5/SplendidUI/Formatting.js"                          )"></script>
+	<script type="text/javascript" src="@Url.Content("/html5/SplendidUI/Sql.js"                                 )"></script>
+
+	<script type="text/javascript" src="@Url.Content("/Surveys/SurveyScripts/SplendidRequest.js"                )"></script>
+	<script type="text/javascript" src="@Url.Content("/Surveys/SurveyScripts/Survey.js"                         )"></script>
+	<script type="text/javascript" src="@Url.Content("/Surveys/SurveyScripts/SurveyPage.js"                     )"></script>
+	<script type="text/javascript" src="@Url.Content("/Surveys/SurveyScripts/SurveyQuestion.js"                 )"></script>
+	<script type="text/javascript" src="@Url.Content("/Surveys/SurveyScripts/SurveyQuestion_Radio.js"           )"></script>
+	<script type="text/javascript" src="@Url.Content("/Surveys/SurveyScripts/SurveyQuestion_Checkbox.js"        )"></script>
+	<script type="text/javascript" src="@Url.Content("/Surveys/SurveyScripts/SurveyQuestion_Dropdown.js"        )"></script>
+	<script type="text/javascript" src="@Url.Content("/Surveys/SurveyScripts/SurveyQuestion_Ranking.js"         )"></script>
+	<script type="text/javascript" src="@Url.Content("/Surveys/SurveyScripts/SurveyQuestion_RatingScale.js"     )"></script>
+	<script type="text/javascript" src="@Url.Content("/Surveys/SurveyScripts/SurveyQuestion_RadioMatrix.js"     )"></script>
+	<script type="text/javascript" src="@Url.Content("/Surveys/SurveyScripts/SurveyQuestion_CheckboxMatrix.js"  )"></script>
+	<script type="text/javascript" src="@Url.Content("/Surveys/SurveyScripts/SurveyQuestion_DropdownMatrix.js"  )"></script>
+	<script type="text/javascript" src="@Url.Content("/Surveys/SurveyScripts/SurveyQuestion_TextArea.js"        )"></script>
+	<script type="text/javascript" src="@Url.Content("/Surveys/SurveyScripts/SurveyQuestion_Textbox.js"         )"></script>
+	<script type="text/javascript" src="@Url.Content("/Surveys/SurveyScripts/SurveyQuestion_TextboxMultiple.js" )"></script>
+	<script type="text/javascript" src="@Url.Content("/Surveys/SurveyScripts/SurveyQuestion_TextboxNumerical.js")"></script>
+	<script type="text/javascript" src="@Url.Content("/Surveys/SurveyScripts/SurveyQuestion_PlainText.js"       )"></script>
+	<script type="text/javascript" src="@Url.Content("/Surveys/SurveyScripts/SurveyQuestion_Image.js"           )"></script>
+	<script type="text/javascript" src="@Url.Content("/Surveys/SurveyScripts/SurveyQuestion_Date.js"            )"></script>
+	<script type="text/javascript" src="@Url.Content("/Surveys/SurveyScripts/SurveyQuestion_Demographic.js"     )"></script>
+	<script type="text/javascript" src="@Url.Content("/Surveys/SurveyScripts/SurveyQuestion_Range.js"           )"></script>
+	<script type="text/javascript" src="@Url.Content("/Surveys/SurveyScripts/SurveyQuestion_SingleNumerical.js" )"></script>
+	<script type="text/javascript" src="@Url.Content("/Surveys/SurveyScripts/SurveyQuestion_SingleDate.js"      )"></script>
+	<script type="text/javascript" src="@Url.Content("/Surveys/SurveyScripts/SurveyQuestion_SingleCheckbox.js"  )"></script>
+	<script type="text/javascript" src="@Url.Content("/Surveys/SurveyScripts/SurveyQuestion_Hidden.js"          )"></script>
+
+<script type="text/javascript">
+	var sREMOTE_SERVER       = '@Model.Application["rootURL"] %>';
+	// 04/23/2018 Paul.  Build in javascript to allow proxy handling. 
+	sREMOTE_SERVER           = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port: '') + '@Sql.ToString(@Model.Application["rootURL"])';
+	// 12/01/2014 Paul.  bREMOTE_ENABLED needs to be in the UI page so that it can be quickly accessed by the Formatting functions. 
+	var bREMOTE_ENABLED      = false;
+	// 06/24/2017 Paul.  We need a way to turn off bootstrap for BPMN, ReportDesigner and ChatDashboard. 
+	var bDESKTOP_LAYOUT      = true;
+	// 06/23/2017 Paul.  sPLATFORM_LAYOUT is required with latest build. 
+	var sPLATFORM_LAYOUT     = '';
+	var sAUTHENTICATION      = '';
+	var sHEADER_LOGO_IMAGE   = '@Model.Application["CONFIG.header_logo_image" ]';
+	var sHEADER_LOGO_WIDTH   = '@Model.Application["CONFIG.header_logo_width" ]';
+	var sHEADER_LOGO_HEIGHT  = '@Model.Application["CONFIG.header_logo_height"]';
+	var sHEADER_LOGO_STYLE   = '@Model.Application["CONFIG.header_logo_style" ]';
+	var sCOMPANY_NAME        = '@Model.Application["CONFIG.company_name"      ]';
+	var sLBL_EXIT_LINK       = '@Model.L10n.Term("Surveys.LBL_EXIT_LINK"      )';
+	var sLBL_PREV_LINK       = '@Model.L10n.Term("Surveys.LBL_PREV_LINK"      )';
+	var sLBL_NEXT_LINK       = '@Model.L10n.Term("Surveys.LBL_NEXT_LINK"      )';
+	var sLBL_SUBMIT_LINK     = '@Model.L10n.Term("Surveys.LBL_SUBMIT_LINK"    )';
+	var sLBL_SURVEY_COMPLETE = '@Model.L10n.Term("Surveys.LBL_SURVEY_COMPLETE")';
+	// 08/15/2013 Paul.  Need to capture the Parent ID and submit it along with the survey results. 
+	var sPARENT_ID           = '@Sql.ToGuid(Request.Query["PARENT_ID"])'        ;
+	// 08/17/2018 Paul.  Date format is needed for date validation. 
+	var sUSER_DATE_FORMAT    = '@Sql.EscapeJavaScript(Sql.ToString(@Model.Session["USER_SETTINGS/DATEFORMAT"]))';
+
+	$(document).ready(function()
+	{
+		// 12/30/2015 Paul.  Build runtime header manually so that we can adjust for mobile dynamically. 
+		var divSurveyBody = document.getElementById('divSurveyBody');
+		Survey_CreateRuntimeHeader(divSurveyBody);
+		var lblError = document.getElementById('lblError');
+		try
+		{
+			var divSurveyExitLink = document.getElementById('divSurveyExitLink');
+			divSurveyExitLink.innerHTML = sLBL_EXIT_LINK;
+			divSurveyExitLink.onclick = function()
+			{
+				window.close();
+			};
+
+			if ( !Sql.IsEmptyString(sHEADER_LOGO_IMAGE) )
+			{
+				var divSurveyLogo = document.getElementById('divSurveyLogo');
+				var img = document.createElement('img');
+				img.id  = 'imgSurveyLogo';
+				if ( StartsWith(sHEADER_LOGO_IMAGE, 'http') )
+					img.src    = sHEADER_LOGO_IMAGE;
+				else if ( StartsWith(sHEADER_LOGO_IMAGE, '~/') )
+					img.src    = sREMOTE_SERVER + sHEADER_LOGO_IMAGE.substring(2, sHEADER_LOGO_IMAGE.length);
+				else
+					img.src    = sREMOTE_SERVER + 'Include/images/' + sHEADER_LOGO_IMAGE;
+			
+				if (!Sql.IsEmptyString(sHEADER_LOGO_WIDTH  ) ) img.width         = sHEADER_LOGO_WIDTH ;
+				if ( !Sql.IsEmptyString(sHEADER_LOGO_HEIGHT) ) img.height        = sHEADER_LOGO_HEIGHT;
+				if ( !Sql.IsEmptyString(sCOMPANY_NAME      ) ) img.alt           = sCOMPANY_NAME      ;
+				if ( !Sql.IsEmptyString(sHEADER_LOGO_STYLE ) ) img.style.cssText = sHEADER_LOGO_STYLE ;
+				divSurveyLogo.appendChild(img);
+			}
+		
+			var sID = getUrlParam('id');
+			if ( !Sql.IsEmptyString(sID) )
+			{
+				lblError.innerHTML = 'Retrieving data...';
+				Survey_LoadItem('Surveys', sID, function(status, message)
+				{
+					var lblError = document.getElementById('lblError');
+					if ( status == 1 )
+					{
+						try
+						{
+							rowSURVEY = message;
+							lblError.innerHTML = 'Rendering data...';
+					
+							var survey = new Survey(rowSURVEY);
+							// 08/15/2013 Paul.  Need to capture the Parent ID and submit it along with the survey results. 
+							survey.PARENT_ID           = sPARENT_ID          ;
+							survey.LBL_EXIT_LINK       = sLBL_EXIT_LINK      ;
+							survey.LBL_PREV_LINK       = sLBL_PREV_LINK      ;
+							survey.LBL_NEXT_LINK       = sLBL_NEXT_LINK      ;
+							survey.LBL_SUBMIT_LINK     = sLBL_SUBMIT_LINK    ;
+							survey.LBL_SURVEY_COMPLETE = sLBL_SURVEY_COMPLETE;
+							survey.Render(null, false);
+							lblError.innerHTML = '';
+						}
+						catch(e)
+						{
+							lblError.innerHTML = 'Run Render: ' + e.message;
+						}
+					}
+					else
+					{
+						lblError.innerHTML = 'Survey_LoadItem Response Error: ' + message;
+					}
+				});
+			}
+			else
+			{
+				lblError.innerHTML = 'Survey ID not specified.';
+			}
+		}
+		catch(e)
+		{
+			lblError.innerHTML = 'Ready: ' + e.message;
+		}
+	});
+</script>
+</head>
+<body style="background-color: white;">
+	<form id="frmMain" method="post" runat="server">
+		<div id="divSurveyBody" class="SurveyBody">
+		</div>
+	</form>
+	<div id="divFooterCopyright" align="center" style="margin-top: 4px" class="copyRight">
+		Copyright &copy; 2005-2023 <a id="lnkSplendidCRM" href="http://www.splendidcrm.com" target="_blank" class="copyRightLink">SplendidCRM Software, Inc.</a> All Rights Reserved.<br />
+	</div>
+</body>
+</html>

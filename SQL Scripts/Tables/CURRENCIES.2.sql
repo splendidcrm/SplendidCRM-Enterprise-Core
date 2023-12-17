@@ -1,0 +1,31 @@
+
+/**********************************************************************************************************************
+ * SplendidCRM is a Customer Relationship Management program created by SplendidCRM Software, Inc. 
+ * Copyright (C) 2005-2023 SplendidCRM Software, Inc. All rights reserved.
+ *
+ * Any use of the contents of this file are subject to the SplendidCRM Enterprise Source Code License 
+ * Agreement, or other written agreement between you and SplendidCRM ("License"). By installing or 
+ * using this file, you have unconditionally agreed to the terms and conditions of the License, 
+ * including but not limited to restrictions on the number of users therein, and you may not use this 
+ * file except in compliance with the License. 
+ * 
+ * SplendidCRM owns all proprietary rights, including all copyrights, patents, trade secrets, and 
+ * trademarks, in and to the contents of this file.  You will not link to or in any way combine the 
+ * contents of this file or any derivatives with any Open Source Code in any manner that would require 
+ * the contents of this file to be made available to any third party. 
+ * 
+ *********************************************************************************************************************/
+-- 04/21/2008 Paul.  SugarCRM 5.0 migration. Allow nulls. 
+if exists (select * from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = 'CURRENCIES' and COLUMN_NAME = 'CREATED_BY' and IS_NULLABLE = 'NO') begin -- then
+	print 'alter table CURRENCIES alter column CREATED_BY uniqueidentifier null';
+	alter table CURRENCIES alter column CREATED_BY uniqueidentifier null;
+end -- if;
+GO
+
+-- 04/30/2016 Paul.  Add reference to log entry that modified the record. 
+if not exists (select * from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = 'CURRENCIES' and COLUMN_NAME = 'SYSTEM_CURRENCY_LOG_ID') begin -- then
+	print 'alter table CURRENCIES alter column SYSTEM_CURRENCY_LOG_ID uniqueidentifier null';
+	alter table CURRENCIES add SYSTEM_CURRENCY_LOG_ID uniqueidentifier null;
+end -- if;
+GO
+

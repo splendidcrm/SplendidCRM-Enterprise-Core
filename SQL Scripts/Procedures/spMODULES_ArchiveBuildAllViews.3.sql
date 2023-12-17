@@ -1,0 +1,69 @@
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME = 'spMODULES_ArchiveBuildAllViews' and ROUTINE_TYPE = 'PROCEDURE')
+	Drop Procedure dbo.spMODULES_ArchiveBuildAllViews;
+GO
+
+
+/**********************************************************************************************************************
+ * SplendidCRM is a Customer Relationship Management program created by SplendidCRM Software, Inc. 
+ * Copyright (C) 2005-2023 SplendidCRM Software, Inc. All rights reserved.
+ *
+ * Any use of the contents of this file are subject to the SplendidCRM Enterprise Source Code License 
+ * Agreement, or other written agreement between you and SplendidCRM ("License"). By installing or 
+ * using this file, you have unconditionally agreed to the terms and conditions of the License, 
+ * including but not limited to restrictions on the number of users therein, and you may not use this 
+ * file except in compliance with the License. 
+ * 
+ * SplendidCRM owns all proprietary rights, including all copyrights, patents, trade secrets, and 
+ * trademarks, in and to the contents of this file.  You will not link to or in any way combine the 
+ * contents of this file or any derivatives with any Open Source Code in any manner that would require 
+ * the contents of this file to be made available to any third party. 
+ * 
+ *********************************************************************************************************************/
+Create Procedure dbo.spMODULES_ArchiveBuildAllViews
+as
+  begin
+	set nocount on
+
+	declare @MODULE_ID   uniqueidentifier;
+	declare @MODULE_NAME nvarchar(25);
+
+	declare MODULES_ARCHIVE_BUILD_ALL_CURSOR cursor for
+	select distinct MODULES.ID
+	     , MODULES.MODULE_NAME
+	  from      MODULES_ARCHIVE_RELATED
+	 inner join MODULES
+	         on MODULES.MODULE_NAME    = MODULES_ARCHIVE_RELATED.MODULE_NAME
+	        and MODULES.MODULE_ENABLED = 1
+	        and MODULES.DELETED        = 0
+	 where MODULES_ARCHIVE_RELATED.DELETED = 0
+	 order by MODULES.MODULE_NAME;
+	
+	open MODULES_ARCHIVE_BUILD_ALL_CURSOR;
+	fetch next from MODULES_ARCHIVE_BUILD_ALL_CURSOR into @MODULE_ID, @MODULE_NAME;
+	while @@FETCH_STATUS = 0 begin -- do
+		print 'Build Archive View: ' + @MODULE_NAME;
+		exec dbo.spMODULES_ArchiveBuildView @MODULE_ID, null;
+		fetch next from MODULES_ARCHIVE_BUILD_ALL_CURSOR into @MODULE_ID, @MODULE_NAME;
+	end -- while;
+	close MODULES_ARCHIVE_BUILD_ALL_CURSOR;
+	deallocate MODULES_ARCHIVE_BUILD_ALL_CURSOR;
+  end
+GO
+
+Grant Execute on dbo.spMODULES_ArchiveBuildAllViews to public;
+GO
+
+/*
+-- 10/16/2018 Paul.  1 minute. 
+begin try
+	begin tran;
+	-- exec dbo.spSqlDropAllArchiveViews ;
+	exec dbo.spMODULES_ArchiveBuildAllViews ;
+	commit tran;
+end try
+begin catch
+	rollback tran;
+	print ERROR_MESSAGE();
+end catch
+*/
+

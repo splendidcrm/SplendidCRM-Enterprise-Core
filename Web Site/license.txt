@@ -1,0 +1,110 @@
+SplendidCRM Software, Inc.
+
+SOURCE CODE LICENSE AGREEMENT
+
+THIS SOURCE CODE LICENSE AGREEMENT IS A LEGAL AGREEMENT BETWEEN YOU, ("LICENSEE" OR
+"YOU"), AND SPLENDIDCRM SOFTWARE, INC. ("SPLENDIDCRM"). THIS AGREEMENT APPLIES TO
+LICENSEE’S USE IN SOURCE CODE FORMAT OF STORED DATABASE FUNCTIONS, PROCEDURES AND
+VIEWS (“SOURCE CODE”) ONLY; OTHER FILES INCLUDED AS PART OF THE SPLENDIDCRM SYSTEM ARE
+COVERED BY THE SUGARCRM PUBLIC LICENSE.
+
+CAREFULLY READ ALL THE TERMS AND CONDITIONS OF THIS AGREEMENT PRIOR TO DOWNLOADING
+AND USING THE SOURCE CODE. BY PRESSING THE "I ACCEPT" BUTTON BELOW OR OTHERWISE USING
+THE SOURCE CODE, LICENSEE AGREES TO BE BOUND BY THESE TERMS AND CONDITIONS. IF YOU DO
+NOT AGREE TO THE TERMS OF THIS AGREEMENT, PRESS THE “CANCEL” BUTTON AND DO NOT
+DOWNLOAD OR USE THE SOURCE CODE.
+
+LICENSE
+This License sets forth Licensee's rights to use the Source Code and all associated documentation (the
+"Documentation"), all of which are the proprietary and copyrighted material of SplendidCRM. Collectively, the
+Source Code and Documentation are referred to in this Agreement as the "Licensed Product." Upon receipt of the
+applicable license fee, SplendidCRM grants to Licensee the personal, non-exclusive, non-transferable right to use
+the Licensed Product in the United States of America in accordance with the terms of this Agreement.
+
+UNDER THIS LICENSE, YOU MAY:
+* Allow the number of users specified in the Order Form associated with this Agreement to use and copy the
+Licensed Product and derivative works thereto ("Derivatives") for your business or other purposes—use of the
+Licensed Product by more than the number of users specified in the Order Form is specifically prohibited.
+
+All recipients of the Source Code and Derivatives under this Agreement must agree to protect the Source Code
+and Derivatives in a manner substantially equivalent to the protections contained in this Agreement. In particular,
+without limiting the foregoing, Licensee’s customers who receive the Source Code and/or Derivatives in source
+code format must agree to distribute such source code only to other SplendidCRM customers who have acquired a
+license to the Source Code from SplendidCRM.
+
+PROPRIETARY RIGHTS
+SplendidCRM owns all proprietary rights, including all copyrights, patents, trade secrets, and trademarks, in and to
+the Licensed Product. Licensee agrees to take all reasonable steps to prevent unauthorized disclosure, use or
+copying of the Licensed Product. Licensee also agrees to include in all copies of the Source Code all
+SplendidCRM copyright and proprietary notices. SplendidCRM reserves all rights not expressly granted to
+Licensee.
+
+Licensee retains all proprietary rights in original software and documentation that Licensee develops that is not a
+derivative work of the Source Code or Documentation. All software and documentation developed by Licensee
+that is a derivative work of the Source Code or Documentation shall be owned jointly by Licensee and
+SplendidCRM, without accounting of profit.
+
+Licensee will not link to or in any way combine the Licensed Product or any Derivatives with any Open Source
+Code (as defined below) in any manner that would require the Source Code to be made available to any third
+party. “Open Source Code” means software licensed or distributed under any of the following or similar licenses
+or distribution models: (a) GNU's General Public License (GPL) or Lesser/Library GPL (LGPL), (b) The Artistic
+License (e.g., PERL), (c) the Mozilla Public License, (d) the Netscape Public License, (e) the Berkeley software
+design (BSD) license including Free BSD or BSD-style license, (f) the Sun Community Source License (SCSL), (g)
+an Open Source Foundation License (e.g., CDE and Motif UNIX user interfaces), and (h) the Apache Server
+license.
+
+FEE
+You agree to pay SplendidCRM the amount set forth on the Order Form upon execution of this Agreement.
+
+TERM
+This Agreement is effective until terminated. Licensee may terminate this Agreement by destroying or returning
+the Licensed Product and all copies thereof. This license will also automatically terminate if Licensee fails to
+comply with any term or condition of this Agreement. Licensee agrees, upon such termination, to destroy all
+copies of the Licensed Product. Except as provided in the following section, returning the Licensed Product to
+SplendidCRM following the opening and/or use of the Licensed Product will not entitle Licensee to a refund.
+
+WARRANTY DISCLAIMER
+THE SOURCE CODE IS PROVIDED UNDER THIS AGREEMENT ON AN “AS IS” BASIS, WITHOUT
+WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED WARRANTIES
+THAT THE SOURCE CODE IS FREE OF DEFECTS, MERCHANTABLE, FIT FOR A PARTICULAR PURPOSE
+OR NON-INFRINGING. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE SOURCE
+CODE IS WITH YOU. THIS DISCLAIMER OF WARRANTY CONSTITUTES AN ESSENTIAL PART OF THIS
+AGREEMENT. NO USE OF ANY SOURCE CODE IS AUTHORIZED HEREUNDER EXCEPT UNDER THIS
+DISCLAIMER.
+
+LIMITATION OF LIABILITY
+IN NO EVENT SHALL SPLENDIDCRM BE RESPONSIBLE FOR ANY DAMAGES OF ANY KIND, INCLUDING
+ANY DIRECT, SPECIAL, PUNITIVE, INDIRECT, INCIDENTAL OR CONSEQUENTIAL DAMAGES, AND
+INCLUDING, BUT NOT LIMITED TO, LOSS OF DATA OR LOST PROFITS AS A RESULT OF USE OF, OR
+INABILITY TO USE, THE SOURCE CODE, WHETHER BASED ON TORT (INCLUDING NEGLIGENCE),
+CONTRACT, OR OTHER LEGAL THEORY, EVEN IF SPLENDIDCRM IS MADE AWARE OF THE POSSIBILITY
+OF SUCH DAMAGES.
+
+GENERAL PROVISIONS
+Entire Agreement. This Agreement sets forth the entire understanding between Licensee and SplendidCRM with
+respect to the subject matter hereof. This Agreement may be amended only in a writing signed by both parties.
+No vendor, distributor, dealer, retailer, sales person or other person is authorized to modify this Agreement or to
+make any warranty, representation or promise which is different than, or in addition to, the representations or
+promises of this Agreement.
+
+Export. Export of the Licensed Product outside of the United States is subject to the Export Administration
+Regulations of the Bureau of Export Affairs, United States Department of Commerce. In the event Licensee
+desires to export the Source Code outside of the United States, Licensee, at its own expense, shall comply with all
+applicable regulations governing such export. SplendidCRM makes no warranty relating to the exportability of the
+Source Code to any particular country.
+
+Other. No waiver of any right under this Agreement shall be effective unless in writing, signed by a duly authorized
+representative of SplendidCRM. Failure to insist upon strict compliance with this Agreement shall not be deemed
+a waiver of any future right arising out of this Agreement. This Agreement shall be governed by and construed in
+accordance with the laws of the State of North Carolina. The parties agree that sole jurisdiction and venue for any
+dispute relating to this Agreement shall be in a state or federal court in Wake County, North Carolina. The United
+Nations Convention on Contracts for the International Sale of Goods is expressly excluded and shall not apply to
+this Agreement. If any provision of this Agreement is held by a court of competent jurisdiction to be invalid or
+unenforceable, such provision shall be fully severable, and this Agreement shall be construed and enforced as if
+the illegal, invalid or unenforceable provision had never been a part of this Agreement. You may not assign or
+transfer this Agreement, and any such attempted assignment or transfer shall be null and void. The prevailing
+party in any action to enforce this Agreement shall be entitled to recover its reasonable attorney’s fees from the
+other party.
+
+If you have any questions concerning this Agreement, please contact SplendidCRM Software, Inc. at
+SplendidCRM Software, Inc., 705 Laurel Bay Lane, Holly Springs, North Carolina 27540.

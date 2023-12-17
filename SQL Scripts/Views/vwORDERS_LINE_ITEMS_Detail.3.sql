@@ -1,0 +1,41 @@
+if exists (select * from INFORMATION_SCHEMA.VIEWS where TABLE_NAME = 'vwORDERS_LINE_ITEMS_Detail')
+	Drop View dbo.vwORDERS_LINE_ITEMS_Detail;
+GO
+
+
+/**********************************************************************************************************************
+ * SplendidCRM is a Customer Relationship Management program created by SplendidCRM Software, Inc. 
+ * Copyright (C) 2005-2023 SplendidCRM Software, Inc. All rights reserved.
+ *
+ * Any use of the contents of this file are subject to the SplendidCRM Enterprise Source Code License 
+ * Agreement, or other written agreement between you and SplendidCRM ("License"). By installing or 
+ * using this file, you have unconditionally agreed to the terms and conditions of the License, 
+ * including but not limited to restrictions on the number of users therein, and you may not use this 
+ * file except in compliance with the License. 
+ * 
+ * SplendidCRM owns all proprietary rights, including all copyrights, patents, trade secrets, and 
+ * trademarks, in and to the contents of this file.  You will not link to or in any way combine the 
+ * contents of this file or any derivatives with any Open Source Code in any manner that would require 
+ * the contents of this file to be made available to any third party. 
+ * 
+ *********************************************************************************************************************/
+-- 05/21/2009 Paul.  Added serial number and support fields. 
+-- 03/15/2012 Paul.  Move Date Supported fields to the base view so that they can be used by the workflow engine. 
+Create View dbo.vwORDERS_LINE_ITEMS_Detail
+as
+select vwORDERS_LINE_ITEMS.*
+     , ORDERS_LINE_ITEMS.SERIAL_NUMBER
+     , ORDERS_LINE_ITEMS.ASSET_NUMBER
+     , ORDERS_LINE_ITEMS.SUPPORT_NAME
+     , ORDERS_LINE_ITEMS.SUPPORT_CONTACT
+     , ORDERS_LINE_ITEMS.SUPPORT_TERM
+     , ORDERS_LINE_ITEMS.SUPPORT_DESCRIPTION
+  from      vwORDERS_LINE_ITEMS
+ inner join ORDERS_LINE_ITEMS
+         on ORDERS_LINE_ITEMS.ID = vwORDERS_LINE_ITEMS.ID
+
+GO
+
+Grant Select on dbo.vwORDERS_LINE_ITEMS_Detail to public;
+GO
+

@@ -1,0 +1,79 @@
+﻿@page "/SystemCheck.aspx"
+@using SplendidCRM.Pages
+@model SystemCheckModel
+@{
+    ViewData["Title"] = "System Check";
+}
+<div>@Model.LastError</div>
+&nbsp;<a href="React/Home/">Home</a>
+<h1>System</h1>
+<table border="1" cellpadding="3" cellspacing="0">
+<tr><td>SplendidCRM Build     </td><td>@Model.Application["SplendidVersion"           ]  </td></tr>
+<tr><td>Service Level         </td><td>@Model.Application["CONFIG.service_level"      ]  </td></tr>
+<tr><td>Server Name           </td><td>@Model.Application["ServerName"                ]  </td></tr>
+<tr><td>Server IP Address     </td><td>@Model.Application["ServerIPAddress"           ]  </td></tr>
+<tr><td>Machine Name          </td><td>@Model.MachineName                                </td></tr>
+<tr><td>Job Server            </td><td>@Model.Application["SplendidJobServerFlag"     ]  </td></tr>
+<tr><td>Workflow Server       </td><td>@Model.Application["SplendidWorkflowServerFlag"]  </td></tr>
+<tr><td>ApplicationPath       </td><td>@Model.Application["ApplicationPath"           ]  </td></tr>
+<tr><td>rootURL               </td><td>@Model.Application["rootURL"                   ]  </td></tr>
+<tr><td>imageURL              </td><td>@Model.Application["imageURL"                  ]  </td></tr>
+<tr><td>scriptURL             </td><td>@Model.Application["scriptURL"                 ]  </td></tr>
+<tr><td>chartURL              </td><td>@Model.Application["chartURL"                  ]  </td></tr>
+<tr><td>Splendid Provider     </td><td>@Model.Application["SplendidProvider"          ]  </td></tr>
+<tr><td>Default Theme         </td><td>@Model.Application["CONFIG.default_theme"      ]  </td></tr>
+<tr><td>Default Language      </td><td>@Model.Application["CONFIG.default_language"   ]  </td></tr>
+<tr><td>Windows Authentication</td><td>@(Model.Security.IsWindowsAuthentication() ? "Yes" : "No")</td></tr>
+<tr><td>User-Agent            </td><td>@Request.Headers["User-Agent"].ToString()         </td></tr>
+<tr><td>User-Address          </td><td>@Request.Headers["User-Address"].ToString()       </td></tr>
+<tr><td>Platform              </td><td>@System.Environment.OSVersion.Platform            </td></tr>
+<tr><td>Silverlight           </td><td>@Model.Application["CONFIG.enable_silverlight" ]  </td></tr>
+<tr><td>Flash                 </td><td>@Model.Application["CONFIG.enable_flash"       ]  </td></tr>
+<tr><td>System Events         </td><td>@Model.Application["SYSTEM_EVENTS.MaxDate"     ]  </td></tr>
+<tr><td>.NET Version          </td><td>@System.Environment.Version                       </td></tr>
+<tr><td>SQL Version           </td><td><pre>@Model.SqlVersion                      </pre></td></tr>
+</table>
+
+<h1>User</h1>
+<table border="1" cellpadding="3" cellspacing="0">
+<tr><td>Session ID       </td><td>@Model.Session.Id                                  </td></tr>
+<tr><td>User-Address     </td><td>@Request.Headers["User-Address"].ToString()        </td></tr>
+<tr><td>AUTH_USER        </td><td>@Model.AUTH_USER                                   </td></tr>
+<tr><td>USER_ID          </td><td>@Model.Security.USER_ID                            </td></tr>
+<tr><td>FULL_NAME        </td><td>@Model.Security.FULL_NAME                          </td></tr>
+<tr><td>USER_NAME        </td><td>@Model.Security.USER_NAME                          </td></tr>
+<tr><td>EMAIL1           </td><td>@Model.Security.EMAIL1                             </td></tr>
+<tr><td>EXCHANGE_ALIAS   </td><td>@Model.Security.EXCHANGE_ALIAS                     </td></tr>
+<tr><td>TEAM_ID          </td><td>@Model.Security.TEAM_ID                            </td></tr>
+<tr><td>TEAM_NAME        </td><td>@Model.Security.TEAM_NAME                          </td></tr>
+<tr><td>IS_ADMIN         </td><td>@(Model.Security.IS_ADMIN          ? "Yes" : "No") </td></tr>
+<tr><td>IS_ADMIN_DELEGATE</td><td>@(Model.Security.IS_ADMIN_DELEGATE ? "Yes" : "No") </td></tr>
+<tr><td>PORTAL_ONLY      </td><td>@(Model.Security.PORTAL_ONLY       ? "Yes" : "No") </td></tr>
+<tr><td>themeURL         </td><td>@Model.Session["themeURL"]                         </td></tr>
+
+</table>
+
+<h1>User Preferences</h1>
+<table border="1" cellpadding="3" cellspacing="0">
+<tr><td>USER_SETTINGS/CULTURE         </td><td>@Model.Session["USER_SETTINGS/CULTURE"         ]</td></tr>
+<tr><td>USER_SETTINGS/THEME           </td><td>@Model.Session["USER_SETTINGS/THEME"           ]</td></tr>
+<tr><td>USER_SETTINGS/DATEFORMAT      </td><td>@Model.Session["USER_SETTINGS/DATEFORMAT"      ]</td></tr>
+<tr><td>USER_SETTINGS/TIMEFORMAT      </td><td>@Model.Session["USER_SETTINGS/TIMEFORMAT"      ]</td></tr>
+<tr><td>USER_SETTINGS/TIMEZONE        </td><td>@Model.Session["USER_SETTINGS/TIMEZONE"        ]</td></tr>
+<tr><td>USER_SETTINGS/CURRENCY        </td><td>@Model.Session["USER_SETTINGS/CURRENCY"        ]</td></tr>
+</table>
+
+<h1>Culture Defaults</h1>
+<table border="1" cellpadding="3" cellspacing="0">
+<tr><td>Name                    </td><td>@Model.culture.Name                                  </td></tr>
+<tr><td>DisplayName             </td><td>@Model.culture.DisplayName                           </td></tr>
+<tr><td>ShortDatePattern        </td><td>@Model.culture.DateTimeFormat.ShortDatePattern       </td></tr>
+<tr><td>ShortTimePattern        </td><td>@Model.culture.DateTimeFormat.ShortTimePattern       </td></tr>
+<tr><td>CurrencySymbol          </td><td>@Model.culture.NumberFormat.CurrencySymbol           </td></tr>
+<tr><td>CurrencyGroupSeparator  </td><td>@Model.culture.NumberFormat.CurrencyGroupSeparator   </td></tr>
+<tr><td>CurrencyDecimalSeparator</td><td>@Model.culture.NumberFormat.CurrencyDecimalSeparator </td></tr>
+<tr><td>NumberGroupSeparator    </td><td>@Model.culture.NumberFormat.NumberGroupSeparator     </td></tr>
+<tr><td>NumberDecimalSeparator  </td><td>@Model.culture.NumberFormat.NumberDecimalSeparator   </td></tr>
+</table>
+
+<br />

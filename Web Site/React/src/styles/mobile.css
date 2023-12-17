@@ -1,0 +1,109 @@
+/*
+ * Copyright (C) 2005-2023 SplendidCRM Software, Inc. All rights reserved.
+ *
+ * Any use of the contents of this file are subject to the SplendidCRM Enterprise Source Code License 
+ * Agreement, or other written agreement between you and SplendidCRM ("License"). By installing or 
+ * using this file, you have unconditionally agreed to the terms and conditions of the License, 
+ * including but not limited to restrictions on the number of users therein, and you may not use this 
+ * file except in compliance with the License. 
+ * 
+ */
+
+.navTopSpacer
+{
+	position: fixed;
+	top: 0px;
+	height: 0px;
+	width: 100%;
+	z-index: 100;
+	/* background-color: white;*/
+}
+
+.navTop
+{
+	position: fixed;
+	top: 0px;
+	width: 100%;
+	z-index: 100;
+}
+
+.navCenter
+{
+	width: 70%;
+	text-align: center;
+	white-space: nowrap;
+	font-size: large;
+	border-bottom: solid 1px black;
+	background-color: #FFD14E;
+}
+
+.navChatChannel, .navChatChannel:hover
+{
+	font-size: medium;
+	text-decoration: none;
+}
+
+.navLeft
+{
+	padding: 0px;
+	width: 15%;
+	text-align: left;
+	white-space: nowrap;
+	text-decoration: none;
+	border-bottom: solid 1px black;
+	background-color: #FFD14E;
+}
+
+.navLeft a
+{
+	text-decoration: none;
+}
+
+.navButton
+{
+	padding-left: 4px;
+	padding-right: 4px;
+}
+
+.navRight
+{
+	padding: 3px;
+	width: 15%;
+	text-align: right;
+	white-space: nowrap;
+	border-bottom: solid 1px black;
+	background-color: #FFD14E;
+}
+
+.iw-cm-menu li
+{
+	background-color: #FFD14E;
+	height: 16px;
+	font-size: 14px;
+}
+
+.iw-mIcon
+{
+	height: 16px;
+	top: 2px;
+	left: 2px;
+}
+
+.iw-contextMenu li.iw-mDisable
+{
+	background-color: #FFD14E;
+	color: black;
+	font-weight: bold;
+	opacity:.9;
+}
+.iw-mOverlay
+{
+	opacity:.1;
+}
+
+li.iw-mSelected
+{
+	background-color: #036;
+	color           : #F2F2F2;
+}
+
