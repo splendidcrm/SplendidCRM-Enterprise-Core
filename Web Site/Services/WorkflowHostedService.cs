@@ -32,9 +32,10 @@ namespace SplendidCRM
 	// https://learn.microsoft.com/en-us/aspnet/core/fundamentals/host/hosted-services?view=aspnetcore-5.0&tabs=visual-studio#consuming-a-scoped-service-in-a-background-task
 	public class WorkflowHostedService : IHostedService, IDisposable
 	{
-		private readonly   IServiceProvider                    _serviceProvider;
-		private readonly   ILogger<WorkflowHostedService>      _logger         ;
-		private            Timer                               _timer          ;
+		private HttpApplicationState Application             = new HttpApplicationState();
+		private readonly   IServiceProvider                  _serviceProvider;
+		private readonly   ILogger<WorkflowHostedService>    _logger         ;
+		private            Timer                             _timer          ;
 		private static bool bInsideTimer = false;
 
 		public WorkflowHostedService(IServiceProvider serviceProvider, ILogger<WorkflowHostedService> logger)
@@ -73,41 +74,45 @@ namespace SplendidCRM
 
 		private void DoWork(object state)
 		{
-			using ( IServiceScope scope = _serviceProvider.CreateScope() )
+			// 12/20/203 Paul.  Service can start before database initialized. 
+			if ( Sql.ToBoolean(Application["SplendidInit.InitApp"]) )
 			{
-				SplendidError SplendidError = scope.ServiceProvider.GetRequiredService<SplendidError>();
-				if ( !bInsideTimer )
+				using ( IServiceScope scope = _serviceProvider.CreateScope() )
 				{
-					bInsideTimer = true;
-					try
+					SplendidError SplendidError = scope.ServiceProvider.GetRequiredService<SplendidError>();
+					if ( !bInsideTimer )
 					{
-						_logger.LogDebug($"WorkflowHostedService.DoWork " + DateTime.Now.ToString());
-						Debug.WriteLine ($"WorkflowHostedService.DoWork " + DateTime.Now.ToString());
-						WorkflowInit workflowInit = scope.ServiceProvider.GetRequiredService<WorkflowInit>();
-						if ( workflowInit.GetRuntime() == null )
+						bInsideTimer = true;
+						try
 						{
-							try
+							_logger.LogDebug($"WorkflowHostedService.DoWork " + DateTime.Now.ToString());
+							Debug.WriteLine ($"WorkflowHostedService.DoWork " + DateTime.Now.ToString());
+							WorkflowInit workflowInit = scope.ServiceProvider.GetRequiredService<WorkflowInit>();
+							if ( workflowInit.GetRuntime() == null )
 							{
-								// 08/31/2023 Paul.  Not ready to start WWF3. 
-								workflowInit.StartRuntime();
+								try
+								{
+									// 08/31/2023 Paul.  Not ready to start WWF3. 
+									workflowInit.StartRuntime();
+								}
+								catch (Exception ex)
+								{
+									_logger.LogError($"Failure while starting WorkflowHostedService/WWF3 {ex}");
+									SplendidError.SystemError(new StackTrace(true).GetFrame(0), $"Failure while starting WorkflowHostedService/WWF3 {ex}");
+								}
 							}
-							catch (Exception ex)
-							{
-								_logger.LogError($"Failure while starting WorkflowHostedService/WWF3 {ex}");
-								SplendidError.SystemError(new StackTrace(true).GetFrame(0), $"Failure while starting WorkflowHostedService/WWF3 {ex}");
-							}
+							WorkflowUtils workflowUtils = scope.ServiceProvider.GetRequiredService<WorkflowUtils>();
+							workflowUtils.OnTimer();
 						}
-						WorkflowUtils workflowUtils = scope.ServiceProvider.GetRequiredService<WorkflowUtils>();
-						workflowUtils.OnTimer();
-					}
-					catch (Exception ex)
-					{
-						_logger.LogError($"Failure while processing WorkflowHostedService {ex}");
-						SplendidError.SystemError(new StackTrace(true).GetFrame(0), ex);
-					}
-					finally
-					{
-						bInsideTimer = false;
+						catch (Exception ex)
+						{
+							_logger.LogError($"Failure while processing WorkflowHostedService {ex}");
+							SplendidError.SystemError(new StackTrace(true).GetFrame(0), ex);
+						}
+						finally
+						{
+							bInsideTimer = false;
+						}
 					}
 				}
 			}

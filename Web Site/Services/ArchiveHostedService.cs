@@ -32,8 +32,9 @@ namespace SplendidCRM
 	// https://learn.microsoft.com/en-us/aspnet/core/fundamentals/host/hosted-services?view=aspnetcore-5.0&tabs=visual-studio#consuming-a-scoped-service-in-a-background-task
 	public class ArchiveHostedService : IHostedService, IDisposable
 	{
+		private HttpApplicationState Application             = new HttpApplicationState();
 		private readonly   IServiceProvider                  _serviceProvider;
-		private readonly   ILogger<ArchiveHostedService> _logger         ;
+		private readonly   ILogger<ArchiveHostedService>     _logger         ;
 		private            Timer                             _timer          ;
 
 		public ArchiveHostedService(IServiceProvider serviceProvider, ILogger<ArchiveHostedService> logger)
@@ -71,20 +72,24 @@ namespace SplendidCRM
 
 		private void DoWork(object state)
 		{
-			using ( IServiceScope scope = _serviceProvider.CreateScope() )
+			// 12/20/203 Paul.  Service can start before database initialized. 
+			if ( Sql.ToBoolean(Application["SplendidInit.InitApp"]) )
 			{
-				SplendidError SplendidError = scope.ServiceProvider.GetRequiredService<SplendidError>();
-				try
+				using ( IServiceScope scope = _serviceProvider.CreateScope() )
 				{
-					_logger.LogDebug($"ArchiveHostedService.DoWork " + DateTime.Now.ToString());
-					Debug.WriteLine ($"ArchiveHostedService.DoWork " + DateTime.Now.ToString());
-					SchedulerUtils schedulerUtils = scope.ServiceProvider.GetRequiredService<SchedulerUtils>();
-					schedulerUtils.OnArchiveTimer();
-				}
-				catch (Exception ex)
-				{
-					_logger.LogError($"Failure while processing ArchiveHostedService: {ex.Message}");
-					SplendidError.SystemError(new StackTrace(true).GetFrame(0), ex);
+					SplendidError SplendidError = scope.ServiceProvider.GetRequiredService<SplendidError>();
+					try
+					{
+						_logger.LogDebug($"ArchiveHostedService.DoWork " + DateTime.Now.ToString());
+						Debug.WriteLine ($"ArchiveHostedService.DoWork " + DateTime.Now.ToString());
+						SchedulerUtils schedulerUtils = scope.ServiceProvider.GetRequiredService<SchedulerUtils>();
+						schedulerUtils.OnArchiveTimer();
+					}
+					catch (Exception ex)
+					{
+						_logger.LogError($"Failure while processing ArchiveHostedService: {ex.Message}");
+						SplendidError.SystemError(new StackTrace(true).GetFrame(0), ex);
+					}
 				}
 			}
 		}

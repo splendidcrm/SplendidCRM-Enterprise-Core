@@ -32,9 +32,10 @@ namespace SplendidCRM
 	// https://learn.microsoft.com/en-us/aspnet/core/fundamentals/host/hosted-services?view=aspnetcore-5.0&tabs=visual-studio#consuming-a-scoped-service-in-a-background-task
 	public class SchedulerHostedService : IHostedService, IDisposable
 	{
-		private readonly   IServiceProvider                    _serviceProvider;
-		private readonly   ILogger<SchedulerHostedService> _logger         ;
-		private            Timer                               _timer          ;
+		private HttpApplicationState Application             = new HttpApplicationState();
+		private readonly   IServiceProvider                  _serviceProvider;
+		private readonly   ILogger<SchedulerHostedService>   _logger         ;
+		private            Timer                             _timer          ;
 
 		public SchedulerHostedService(IServiceProvider serviceProvider, ILogger<SchedulerHostedService> logger)
 		{
@@ -71,20 +72,24 @@ namespace SplendidCRM
 
 		private void DoWork(object state)
 		{
-			using ( IServiceScope scope = _serviceProvider.CreateScope() )
+			// 12/20/203 Paul.  Service can start before database initialized. 
+			if ( Sql.ToBoolean(Application["SplendidInit.InitApp"]) )
 			{
-				SplendidError SplendidError = scope.ServiceProvider.GetRequiredService<SplendidError>();
-				try
+				using ( IServiceScope scope = _serviceProvider.CreateScope() )
 				{
-					_logger.LogDebug($"SchedulerHostedService.DoWork " + DateTime.Now.ToString());
-					Debug.WriteLine ($"SchedulerHostedService.DoWork " + DateTime.Now.ToString());
-					SchedulerUtils schedulerUtils = scope.ServiceProvider.GetRequiredService<SchedulerUtils>();
-					schedulerUtils.OnTimer();
-				}
-				catch (Exception ex)
-				{
-					_logger.LogError($"Failure while processing SchedulerHostedService: {ex.Message}");
-					SplendidError.SystemError(new StackTrace(true).GetFrame(0), ex);
+					SplendidError SplendidError = scope.ServiceProvider.GetRequiredService<SplendidError>();
+					try
+					{
+						_logger.LogDebug($"SchedulerHostedService.DoWork " + DateTime.Now.ToString());
+						Debug.WriteLine ($"SchedulerHostedService.DoWork " + DateTime.Now.ToString());
+						SchedulerUtils schedulerUtils = scope.ServiceProvider.GetRequiredService<SchedulerUtils>();
+						schedulerUtils.OnTimer();
+					}
+					catch (Exception ex)
+					{
+						_logger.LogError($"Failure while processing SchedulerHostedService: {ex.Message}");
+						SplendidError.SystemError(new StackTrace(true).GetFrame(0), ex);
+					}
 				}
 			}
 		}

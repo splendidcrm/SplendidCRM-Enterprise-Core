@@ -1,0 +1,189 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName></SccProjectName>
+    <SccLocalPath></SccLocalPath>
+    <SccAuxPath></SccAuxPath>
+    <SccProvider></SccProvider>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+    <IsPackable>false</IsPackable>
+    <SpaRoot>React\</SpaRoot>
+    <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**;$(SpaRoot)platforms\**;$(SpaRoot)plugins\**</DefaultItemExcludes>
+    <Company>SplendidCRM Software, Inc.</Company>
+    <Copyright>Copyright (C) 2005-2023 SplendidCRM, Inc.  All rights reserved.</Copyright>
+    <Authors>SplendidCRM Software, Inc.</Authors>
+    <VersionSuffix>14.7.$([System.DateTime]::Now.ToString(yy))$([System.DateTime]::Now.DayOfYear.ToString(000)).$([System.DateTime]::Now.ToString(HHmm))</VersionSuffix>
+    <AssemblyVersion Condition=" '$(VersionSuffix)' == '' ">14.7.1.0</AssemblyVersion>
+    <AssemblyVersion Condition=" '$(VersionSuffix)' != '' ">$(VersionSuffix)</AssemblyVersion>
+    <Version Condition=" '$(VersionSuffix)' == '' ">14.7.1.0</Version>
+    <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionSuffix)</Version>
+    <AssemblyName>SplendidCRM_Core</AssemblyName>
+    <RootNamespace>SplendidCRM_Core</RootNamespace>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>.</DockerfileContext>
+    <DockerComposeProjectPath>docker-compose.dcproj</DockerComposeProjectPath>
+    <UserSecretsId>2d46ddfd-5621-40c5-baf2-3edad95cd8d2</UserSecretsId>
+    <CopyRazorGenerateFilesToPublishDirectory>true</CopyRazorGenerateFilesToPublishDirectory>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;ReactOnlyUI</DefineConstants>
+    <NoWarn>1701;1702;618;SYSLIB0014,SYSLIB0021,SYSLIB0022,SYSLIB0011,SYSLIB0014,649,169,67,414</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>TRACE;ReactOnlyUI</DefineConstants>
+    <NoWarn>1701;1702;618;SYSLIB0014,SYSLIB0021,SYSLIB0022,SYSLIB0011,SYSLIB0014,649,169,67,414</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.20.0" />
+    <PackageReference Include="Google.Apis" Version="1.61.0" />
+    <PackageReference Include="Google.Apis.Auth" Version="1.61.0" />
+    <PackageReference Include="Google.Apis.Core" Version="1.61.0" />
+    <PackageReference Include="Google.Apis.Gmail.v1" Version="1.61.0.3098" />
+    <PackageReference Include="Ionic.Zlib.Core" Version="1.0.0" />
+    <PackageReference Include="MailKit" Version="4.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Negotiate" Version="5.0.13" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.13" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.12" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.7.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="4.7.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.11.1" />
+    <PackageReference Include="Microsoft.Identity.Web" Version="1.22.1" />
+    <PackageReference Include="Microsoft.IdentityModel.Protocols.WsFederation" Version="6.31.0" />
+    <PackageReference Include="Microsoft.ML" Version="2.0.1" />
+    <PackageReference Include="Mnt.Microsoft.Exchange.WebServices.Data" Version="2.2.1.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="ReportViewerCore.NETCore" Version="15.1.17" />
+    <PackageReference Include="SharpZipLib" Version="1.4.2" />
+    <PackageReference Include="System.CodeDom" Version="6.0.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.31.0" />
+    <PackageReference Include="Twilio" Version="6.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Don't publish the SPA source files, but do show them in the project files list -->
+    <Compile Remove="Angular\**" />
+    <Compile Remove="React\**" />
+    <Content Remove="$(SpaRoot)**" />
+    <Content Remove="Angular\**" />
+    <Content Remove="React\**" />
+    <EmbeddedResource Remove="Angular\**" />
+    <EmbeddedResource Remove="React\**" />
+    <None Remove="$(SpaRoot)**" />
+    <None Remove="Angular\**" />
+    <None Remove="React\**" />
+    <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+    <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)platforms\**" />
+    <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)pluginss\**" />
+    <None Remove="React\node_modules\**" />
+    <None Remove="React\platforms\**" />
+    <None Remove="React\plugins\**" />
+    <None Remove="React\dist\**" />
+    <None Remove="_sgbak\**" />
+    <None Remove="**\_sgbak\**" />
+    <None Remove="React\yarn-error.log" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Pages\Angular.cshtml" />
+    <None Include="Pages\Calls\AcceptDecline.cshtml" />
+    <None Include="Pages\campaign_trackerv2.cshtml" />
+    <None Include="Pages\Documents\Document.cshtml" />
+    <None Include="Pages\Error.cshtml" />
+    <None Include="Pages\GoogleOAuth\Google_Webhook.cshtml" />
+    <None Include="Pages\Image.cshtml" />
+    <None Include="Pages\Images\EmailImage.cshtml" />
+    <None Include="Pages\Images\Image.cshtml" />
+    <None Include="Pages\Index.cshtml" />
+    <None Include="Pages\Meetings\AcceptDecline.cshtml" />
+    <None Include="Pages\Notes\Attachment.cshtml" />
+    <None Include="Pages\Office365Notifications.cshtml" />
+    <None Include="Pages\paypal_ipn.cshtml" />
+    <None Include="Pages\RemoveMe.cshtml" />
+    <None Include="Pages\Reports\Attachment.cshtml" />
+    <None Include="Pages\Reports\ExportRDL.cshtml" />
+    <None Include="Pages\Reports\ExportSQL.cshtml" />
+    <None Include="Pages\Reports\Render.cshtml" />
+    <None Include="Pages\Surveys\Preview.cshtml" />
+    <None Include="Pages\Surveys\Run.cshtml" />
+    <None Include="Pages\Surveys\Stylesheet.cshtml" />
+    <None Include="Pages\SystemCheck.cshtml" />
+    <None Include="Pages\TwiML.cshtml" />
+    <None Include="Pages\_devtools\GenerateDemo.cshtml" />
+    <None Include="Pages\_devtools\Procedures.cshtml" />
+    <None Include="Pages\_ViewImports.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Common.Logging">
+      <HintPath>.\BackupBinCore6\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="PayPal">
+      <HintPath>.\BackupBinCore6\PayPal.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Rest">
+      <HintPath>.\BackupBinCore6\Spring.Rest.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Social.Core">
+      <HintPath>.\BackupBinCore6\Spring.Social.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Compat.Private.Serialization">
+      <HintPath>.\BackupBinCore6\Compat.Private.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.VisualBasic.Scripting">
+      <HintPath>.\BackupBinCore6\Microsoft.CodeAnalysis.VisualBasic.Scripting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Activities">
+      <HintPath>.\BackupBinCore6\System.Activities.dll</HintPath>
+    </Reference>
+    <Reference Include="Compat.Private.Serialization">
+      <HintPath>.\BackupBinCore6\Compat.Private.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xaml">
+      <HintPath>.\BackupBinCore6\System.Xaml.dll</HintPath>
+    </Reference>
+    <Reference Include="UiPath.Workflow">
+      <HintPath>.\BackupBinCore6\UiPath.Workflow.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="App_Data\Build.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Themes\**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Include\**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Administration\**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="React\src\CustomViewsJS\**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="React\dist\js\**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="html5\**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pages\Surveys\SurveyScripts\**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="App_Data\ZIPCODES.5.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

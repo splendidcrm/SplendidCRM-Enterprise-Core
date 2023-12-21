@@ -33,6 +33,7 @@ namespace SplendidCRM
 	// https://learn.microsoft.com/en-us/aspnet/core/fundamentals/host/hosted-services?view=aspnetcore-7.0&tabs=visual-studio
 	public class QueuedBackgroundService : BackgroundService
 	{
+		private HttpApplicationState Application             = new HttpApplicationState();
 		private readonly   IServiceProvider                  _serviceProvider;
 		private readonly   ILogger<QueuedBackgroundService>  _logger         ;
 		public             IBackgroundTaskQueue              TaskQueue { get; }
@@ -68,24 +69,28 @@ namespace SplendidCRM
 		{
 			while ( !stoppingToken.IsCancellationRequested )
 			{
-				using ( IServiceScope scope = _serviceProvider.CreateScope() )
+				// 12/20/203 Paul.  Service can start before database initialized. 
+				if ( Sql.ToBoolean(Application["SplendidInit.InitApp"]) )
 				{
-					SplendidError SplendidError = scope.ServiceProvider.GetRequiredService<SplendidError>();
-					var workItem = await TaskQueue.DequeueAsync(stoppingToken);
-					try
+					using ( IServiceScope scope = _serviceProvider.CreateScope() )
 					{
-						string sName = nameof(workItem);
-						Debug.WriteLine($"Queued Hosted Service Processing {sName}.");
-						SplendidError.SystemWarning(new StackTrace(true).GetFrame(0), $"Queued Hosted Service Processing {sName}.");
+						SplendidError SplendidError = scope.ServiceProvider.GetRequiredService<SplendidError>();
+						var workItem = await TaskQueue.DequeueAsync(stoppingToken);
+						try
+						{
+							string sName = nameof(workItem);
+							Debug.WriteLine($"Queued Hosted Service Processing {sName}.");
+							SplendidError.SystemWarning(new StackTrace(true).GetFrame(0), $"Queued Hosted Service Processing {sName}.");
 #pragma warning disable CS4014
-						// 05/16/2023 Paul.  We don't want to block other work items, so don't await. 
-						workItem(stoppingToken);
+							// 05/16/2023 Paul.  We don't want to block other work items, so don't await. 
+							workItem(stoppingToken);
 #pragma warning restore CS4014
-					}
-					catch (Exception ex)
-					{
-						_logger.LogError(ex, "Error occurred executing {WorkItem}.", nameof(workItem));
-						SplendidError.SystemError(new StackTrace(true).GetFrame(0), ex);
+						}
+						catch (Exception ex)
+						{
+							_logger.LogError(ex, "Error occurred executing {WorkItem}.", nameof(workItem));
+							SplendidError.SystemError(new StackTrace(true).GetFrame(0), ex);
+						}
 					}
 				}
 				// 05/23/2023 Paul.  Without delay, loop consumes 100% of resources. 
