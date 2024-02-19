@@ -35,6 +35,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Caching.Memory;
 using System.Reflection;
+using DocumentFormat.OpenXml.InkML;
 
 namespace SplendidCRM
 {
@@ -2778,6 +2779,12 @@ namespace SplendidCRM
 										rowFieldSecurity["NAME" ] = "bEnableACLFieldSecurity";
 										rowFieldSecurity["VALUE"] = SplendidInit.bEnableACLFieldSecurity;
 										dt.Rows.Add(rowFieldSecurity);
+										// 02/06/2024 Paul.  Provide a way to detect Azure enabled. 
+										DataRow rowAzureRestExists = null;
+										rowAzureRestExists= dt.NewRow();
+										rowAzureRestExists["NAME" ] = "AzureRestExists";
+										rowAzureRestExists["VALUE"] = Utils.CachedFileExists(hostingEnvironment, "~/Controllers/Administration/Azure/RestController.cs");
+										dt.Rows.Add(rowAzureRestExists);
 										foreach ( DataRow row in dt.Rows )
 										{
 											string sNAME = Sql.ToString(row["NAME"]).ToLower();

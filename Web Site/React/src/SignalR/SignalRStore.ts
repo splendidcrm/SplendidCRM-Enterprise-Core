@@ -10,7 +10,7 @@
  */
 
 // 1. React and fabric. 
-import * as H                                      from 'history'               ;
+import { History }                                 from 'history'               ;
 import $                                           from 'jquery'                ;
 window.$ = $;
 window.jQuery = $;
@@ -91,7 +91,8 @@ export class SignalRStore
 	public  twilioManager     : any = null;
 	public  twitterManager    : any = null;
 	public  phoneBurnerManager: any = null;
-	private history           : H.History<H.LocationState> = null;
+	// 01/15/2024 Paul.  Update History. 
+	private history           : History = null;
 	private SignalR_Command   : (sHubName: string, sCommandName: string, oCommandArguments: any) => void = null;
 
 	public SetHistory(history)

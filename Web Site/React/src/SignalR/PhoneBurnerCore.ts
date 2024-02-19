@@ -19,13 +19,14 @@ import { Crm_Config } from '../scripts/Crm'          ;
 
 export class PhoneBurnerServerCore
 {
-	history                       : H.History<H.LocationState>;
+	// 01/15/2024 Paul.  Updated history package. 
+	history                       : H.History;
 	hub                           : signalR.HubConnection;
 	started                       : boolean;
 	sUSER_ID                      : string;
 	dtPHONEBURNER_TOKEN_EXPIRES_AT: Date;
 
-	constructor(history: H.History<H.LocationState>, hub: signalR.HubConnection, sUSER_ID: string, dtPHONEBURNER_TOKEN_EXPIRES_AT: Date)
+	constructor(history: H.History, hub: signalR.HubConnection, sUSER_ID: string, dtPHONEBURNER_TOKEN_EXPIRES_AT: Date)
 	{
 		this.history                        = history                       ;
 		this.hub                            = hub                           ;
@@ -111,7 +112,7 @@ export class PhoneBurnerServerCore
 	}
 }
 
-export function PhoneBurnerCreateHub(history: H.History<H.LocationState>, sUSER_ID: string, dtPHONEBURNER_TOKEN_EXPIRES_AT: Date): PhoneBurnerServerCore
+export function PhoneBurnerCreateHub(history: H.History, sUSER_ID: string, dtPHONEBURNER_TOKEN_EXPIRES_AT: Date): PhoneBurnerServerCore
 {
 	const hub: signalR.HubConnection = new signalR.HubConnectionBuilder()
 		.withUrl("/signalr_phoneburnerhub")
