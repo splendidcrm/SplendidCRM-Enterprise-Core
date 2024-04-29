@@ -21,7 +21,7 @@ import MainContent                            from './ThemeComponents/MainConten
 function PublicRouteFC()
 {
 	const location = useLocation();
-	console.log((new Date()).toISOString() + ' PublicRouteFC location', location);
+	//console.log((new Date()).toISOString() + ' PublicRouteFC location', location);
 
 	return (<MainContent>
 		<Outlet />

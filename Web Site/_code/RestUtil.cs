@@ -26,6 +26,7 @@ using System.Data.Common;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Diagnostics;
 
 using Microsoft.AspNetCore.Mvc;
@@ -63,8 +64,9 @@ namespace SplendidCRM
 		private Crm.Images           Images             ;
 		// 11/22/2023 Paul.  When unsyncing, we need to immediately clear the remote flag. 
 		private ExchangeSync         ExchangeSync       ;
+		private ChatManager          ChatManager        ;
 
-		public RestUtil(IHttpContextAccessor httpContextAccessor, HttpSessionState Session, Security Security, Sql Sql, SqlProcs SqlProcs, Utils Utils, SplendidError SplendidError, SplendidCache SplendidCache, SplendidDynamic SplendidDynamic, SplendidInit SplendidInit, Crm.Images Images, ExchangeSync ExchangeSync)
+		public RestUtil(IHttpContextAccessor httpContextAccessor, HttpSessionState Session, Security Security, Sql Sql, SqlProcs SqlProcs, Utils Utils, SplendidError SplendidError, SplendidCache SplendidCache, SplendidDynamic SplendidDynamic, SplendidInit SplendidInit, Crm.Images Images, ExchangeSync ExchangeSync, ChatManager ChatManager)
 		{
 			this.Context             = httpContextAccessor.HttpContext;
 			this.Session             = Session            ;
@@ -78,6 +80,7 @@ namespace SplendidCRM
 			this.SplendidInit        = SplendidInit       ;
 			this.Images              = Images             ;
 			this.ExchangeSync        = ExchangeSync       ;
+			this.ChatManager         = ChatManager        ;
 		}
 
 		// 04/01/2020 Paul.  Move json utils to RestUtil. 
@@ -3131,17 +3134,14 @@ namespace SplendidCRM
 												}
 											}
 											// 11/18/2014 Paul.  Send a SignalR alert if created. 
-											// 11/23/2023 Paul.  Chat not fully implemented. 
-											/*
 											if ( sTABLE_NAME == "CHAT_MESSAGES" )
 											{
 												// 08/05/2021 Paul.  ChatManager may not have been initialized. 
-												if ( !bRecordExists && !Sql.ToBoolean(Application["CONFIG.SignalR.Disabled"]) && ChatManager.Instance != null )
+												if ( !bRecordExists && !Sql.ToBoolean(Application["CONFIG.SignalR.Disabled"]) && ChatManager != null )
 												{
-													ChatManager.Instance.NewMessage(gID);
+													Task.Run(() => ChatManager.NewMessage(gID)).Wait();
 												}
 											}
-											*/
 											// 10/08/2020 Paul.  Update current user session data. 
 											if ( sTABLE_NAME == "USERS" && gID == Security.USER_ID )
 											{

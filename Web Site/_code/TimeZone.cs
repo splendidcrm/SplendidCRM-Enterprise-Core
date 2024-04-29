@@ -179,71 +179,102 @@ namespace SplendidCRM
 			m_sSTANDARD_ABBREVIATION = String.Empty;
 			m_sDAYLIGHT_NAME         = String.Empty;
 			m_sDAYLIGHT_ABBREVIATION = String.Empty;
-			try
+			// 04/27/2024 Paul.  We should not be accessing registry every time we need the default timezone. 
+			TimeZone T10z = Application["TIMEZONE.Default"] as SplendidCRM.TimeZone;
+			if ( T10z == null )
 			{
-#pragma warning disable CA1416
-				RegistryKey keyEST = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Time Zones\Eastern Standard Time");
-				if ( keyEST != null )
+				try
 				{
-					m_sSTANDARD_NAME = keyEST.GetValue("Std"    ).ToString();
-					m_sNAME          = keyEST.GetValue("Display").ToString();
-					m_sDAYLIGHT_NAME = keyEST.GetValue("Dlt"    ).ToString();
-					byte[] byTZI         = (byte[]) keyEST.GetValue("TZI");
+#pragma warning disable CA1416
+					RegistryKey keyEST = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Time Zones\Eastern Standard Time");
+					if ( keyEST != null )
+					{
+						m_sSTANDARD_NAME = keyEST.GetValue("Std"    ).ToString();
+						m_sNAME          = keyEST.GetValue("Display").ToString();
+						m_sDAYLIGHT_NAME = keyEST.GetValue("Dlt"    ).ToString();
+						byte[] byTZI         = (byte[]) keyEST.GetValue("TZI");
 
-					TZI tzi ;
-					GCHandle h = GCHandle.Alloc(byTZI, GCHandleType.Pinned);
-					try
-					{
-						tzi = (TZI) Marshal.PtrToStructure( h.AddrOfPinnedObject(), typeof(TZI) );
-						m_nBIAS                = tzi.nBias                    ;
-						m_nSTANDARD_BIAS       = tzi.nStandardBias            ;
-						m_nDAYLIGHT_BIAS       = tzi.nDaylightBias            ;
-						m_nSTANDARD_YEAR       = tzi.dtStandardDate.wYear     ;
-						m_nSTANDARD_MONTH      = tzi.dtStandardDate.wMonth    ;
-						m_nSTANDARD_WEEK       = tzi.dtStandardDate.wDay      ;
-						m_nSTANDARD_DAYOFWEEK  = tzi.dtStandardDate.wDayOfWeek;
-						m_nSTANDARD_HOUR       = tzi.dtStandardDate.wHour     ;
-						m_nSTANDARD_MINUTE     = tzi.dtStandardDate.wMinute   ;
-						m_nDAYLIGHT_YEAR       = tzi.dtDaylightDate.wYear     ;
-						m_nDAYLIGHT_MONTH      = tzi.dtDaylightDate.wMonth    ;
-						m_nDAYLIGHT_WEEK       = tzi.dtDaylightDate.wDay      ;
-						m_nDAYLIGHT_DAYOFWEEK  = tzi.dtDaylightDate.wDayOfWeek;
-						m_nDAYLIGHT_HOUR       = tzi.dtDaylightDate.wHour     ;
-						m_nDAYLIGHT_MINUTE     = tzi.dtDaylightDate.wMinute   ;
+						TZI tzi ;
+						GCHandle h = GCHandle.Alloc(byTZI, GCHandleType.Pinned);
+						try
+						{
+							tzi = (TZI) Marshal.PtrToStructure( h.AddrOfPinnedObject(), typeof(TZI) );
+							m_nBIAS                = tzi.nBias                    ;
+							m_nSTANDARD_BIAS       = tzi.nStandardBias            ;
+							m_nDAYLIGHT_BIAS       = tzi.nDaylightBias            ;
+							m_nSTANDARD_YEAR       = tzi.dtStandardDate.wYear     ;
+							m_nSTANDARD_MONTH      = tzi.dtStandardDate.wMonth    ;
+							m_nSTANDARD_WEEK       = tzi.dtStandardDate.wDay      ;
+							m_nSTANDARD_DAYOFWEEK  = tzi.dtStandardDate.wDayOfWeek;
+							m_nSTANDARD_HOUR       = tzi.dtStandardDate.wHour     ;
+							m_nSTANDARD_MINUTE     = tzi.dtStandardDate.wMinute   ;
+							m_nDAYLIGHT_YEAR       = tzi.dtDaylightDate.wYear     ;
+							m_nDAYLIGHT_MONTH      = tzi.dtDaylightDate.wMonth    ;
+							m_nDAYLIGHT_WEEK       = tzi.dtDaylightDate.wDay      ;
+							m_nDAYLIGHT_DAYOFWEEK  = tzi.dtDaylightDate.wDayOfWeek;
+							m_nDAYLIGHT_HOUR       = tzi.dtDaylightDate.wHour     ;
+							m_nDAYLIGHT_MINUTE     = tzi.dtDaylightDate.wMinute   ;
+						}
+						finally
+						{
+							h.Free();
+						}
 					}
-					finally
-					{
-						h.Free();
-					}
-				}
 #pragma warning restore CA1416
+				}
+				catch
+				{
+					// 07/25/2006 Paul.  Some web hosting companies have tight security and block all access to the registry. 
+					// In those cases, just assume EST. 
+					m_sNAME                  = "(GMT-05:00) Eastern Time (US & Canada)";
+					m_sSTANDARD_ABBREVIATION = "EST";
+					m_sSTANDARD_NAME         = "Eastern Standard Time";
+					m_sDAYLIGHT_NAME         = "Eastern Daylight Time";
+					m_sDAYLIGHT_ABBREVIATION = "EDT";
+					m_nBIAS                  = 300;
+					m_nSTANDARD_BIAS         =   0;
+					m_nDAYLIGHT_BIAS         = -60;
+					m_nSTANDARD_YEAR         =   0;
+					m_nSTANDARD_MONTH        =  10;
+					m_nSTANDARD_WEEK         =   5;
+					m_nSTANDARD_DAYOFWEEK    =   0;
+					m_nSTANDARD_HOUR         =   2;
+					m_nSTANDARD_MINUTE       =   0;
+					m_nDAYLIGHT_YEAR         =   0;
+					m_nDAYLIGHT_MONTH        =   4;
+					m_nDAYLIGHT_WEEK         =   1;
+					m_nDAYLIGHT_DAYOFWEEK    =   0;
+					m_nDAYLIGHT_HOUR         =   2;
+					m_nDAYLIGHT_MINUTE       =   0;
+					// 01/02/2012 Paul.  Add iCal TZID. 
+					m_sTZID                  = "America/New_York";
+				}
 			}
-			catch
+			else
 			{
-				// 07/25/2006 Paul.  Some web hosting companies have tight security and block all access to the registry. 
-				// In those cases, just assume EST. 
-				m_sNAME                  = "(GMT-05:00) Eastern Time (US & Canada)";
-				m_sSTANDARD_ABBREVIATION = "EST";
-				m_sSTANDARD_NAME         = "Eastern Standard Time";
-				m_sDAYLIGHT_NAME         = "Eastern Daylight Time";
-				m_sDAYLIGHT_ABBREVIATION = "EDT";
-				m_nBIAS                  = 300;
-				m_nSTANDARD_BIAS         =   0;
-				m_nDAYLIGHT_BIAS         = -60;
-				m_nSTANDARD_YEAR         =   0;
-				m_nSTANDARD_MONTH        =  10;
-				m_nSTANDARD_WEEK         =   5;
-				m_nSTANDARD_DAYOFWEEK    =   0;
-				m_nSTANDARD_HOUR         =   2;
-				m_nSTANDARD_MINUTE       =   0;
-				m_nDAYLIGHT_YEAR         =   0;
-				m_nDAYLIGHT_MONTH        =   4;
-				m_nDAYLIGHT_WEEK         =   1;
-				m_nDAYLIGHT_DAYOFWEEK    =   0;
-				m_nDAYLIGHT_HOUR         =   2;
-				m_nDAYLIGHT_MINUTE       =   0;
-				// 01/02/2012 Paul.  Add iCal TZID. 
-				m_sTZID                  = "America/New_York";
+				m_gID                    = T10z.m_gID                   ;
+				m_sNAME                  = T10z.m_sNAME                 ;
+				m_sSTANDARD_NAME         = T10z.m_sSTANDARD_NAME        ;
+				m_sSTANDARD_ABBREVIATION = T10z.m_sSTANDARD_ABBREVIATION;
+				m_sDAYLIGHT_NAME         = T10z.m_sDAYLIGHT_NAME        ;
+				m_sDAYLIGHT_ABBREVIATION = T10z.m_sDAYLIGHT_ABBREVIATION;
+				m_nBIAS                  = T10z.m_nBIAS                 ;
+				m_nSTANDARD_BIAS         = T10z.m_nSTANDARD_BIAS        ;
+				m_nDAYLIGHT_BIAS         = T10z.m_nDAYLIGHT_BIAS        ;
+				m_nSTANDARD_YEAR         = T10z.m_nSTANDARD_YEAR        ;
+				m_nSTANDARD_MONTH        = T10z.m_nSTANDARD_MONTH       ;
+				m_nSTANDARD_WEEK         = T10z.m_nSTANDARD_WEEK        ;
+				m_nSTANDARD_DAYOFWEEK    = T10z.m_nSTANDARD_DAYOFWEEK   ;
+				m_nSTANDARD_HOUR         = T10z.m_nSTANDARD_HOUR        ;
+				m_nSTANDARD_MINUTE       = T10z.m_nSTANDARD_MINUTE      ;
+				m_nDAYLIGHT_YEAR         = T10z.m_nDAYLIGHT_YEAR        ;
+				m_nDAYLIGHT_MONTH        = T10z.m_nDAYLIGHT_MONTH       ;
+				m_nDAYLIGHT_WEEK         = T10z.m_nDAYLIGHT_WEEK        ;
+				m_nDAYLIGHT_DAYOFWEEK    = T10z.m_nDAYLIGHT_DAYOFWEEK   ;
+				m_nDAYLIGHT_HOUR         = T10z.m_nDAYLIGHT_HOUR        ;
+				m_nDAYLIGHT_MINUTE       = T10z.m_nDAYLIGHT_MINUTE      ;
+				m_bGMTStorage            = T10z.m_bGMTStorage           ;
+				m_sTZID                  = T10z.m_sTZID                 ;
 			}
 		}
 		

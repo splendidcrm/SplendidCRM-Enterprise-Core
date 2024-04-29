@@ -147,6 +147,8 @@ namespace SplendidCRM
 			services.AddScoped<Utils>();
 			services.AddScoped<SplendidInit>();
 			services.AddScoped<SplendidCache>();
+			// 04/27/2024 Paul.  RestUtil uses ChatManager. 
+			services.AddScoped<ChatManager>();
 			services.AddScoped<RestUtil>();
 			services.AddScoped<SplendidDynamic>();
 			services.AddScoped<ModuleUtils.Notes>();
@@ -433,6 +435,8 @@ namespace SplendidCRM
 				// https://learn.microsoft.com/en-us/aspnet/core/signalr/hubs?view=aspnetcore-5.0#strongly-typed-hubs
 				// https://learn.microsoft.com/en-us/aspnet/core/tutorials/signalr?WT.mc_id=dotnet-35129-website&view=aspnetcore-5.0&tabs=visual-studio#add-the-signalr-client-library
 				endpoints.MapHub<TwilioManagerHub>("/signalr_twiliohub");
+				// 04/27/2024 Paul.  Adding support for ChatManager. 
+				endpoints.MapHub<ChatManagerHub>("/signalr_chathub");
 			});
 			// 12/30/2021 Paul.  Using the standard html file does not allow for dynamic base href. 
 			/*

@@ -136,6 +136,9 @@ namespace SplendidCRM
 				Application["ServerScheme"       ] = Request.Scheme  ;
 				Application["ServerName"         ] = sServerName     ;
 				Application["ServerIPAddress"    ] = sServerIPAddress;
+				// 04/21/2024 Paul.  A customer was using a port instead of an application path on IIS. 
+				bool IsDefaultPort = (Request.Scheme == "http" && Request.Host.Port == 80) || (Request.Scheme == "https" && Request.Host.Port == 443);
+				Application["ServerPort"         ] = (IsDefaultPort ? "" : ":" + Request.Host.Port.ToString());
 				Application["ApplicationPath"    ] = sApplicationPath;
 				if ( !sApplicationPath.EndsWith("/") )
 					sApplicationPath += "/";
