@@ -8839,6 +8839,18 @@ namespace SplendidCRM
 												objs[L10n.NAME + "." + "." + sLIST_NAME + "." + sID] = sDISPLAY_NAME;
 											}
 										}
+										// 05/24/2024 Paul.  Just now including credit card years. 
+										using ( DataTable dt = this.CreditCardYears() )
+										{
+											string sLIST_NAME = "credit_card_year";
+											for ( int i = 0; i < dt.Rows.Count; i++ )
+											{
+												DataRow row = dt.Rows[i];
+												string sNAME         = Sql.ToString(row["NAME"        ]);
+												string sDISPLAY_NAME = Sql.ToString(row["DISPLAY_NAME"]);
+												objs[L10n.NAME + "." + "." + sLIST_NAME + "." + sNAME] = sDISPLAY_NAME;
+											}
+										}
 									}
 									// 08/19/2019 Paul.  Modules are used by the ReportDesigner, so it is a non-admin list. 
 									using ( DataTable dt = this.Modules() )
@@ -9509,6 +9521,18 @@ namespace SplendidCRM
 											{
 												DataRow row = dt.Rows[i];
 												string sID = Sql.ToString(row["ID"]);
+												layout.Add(sID);
+											}
+										}
+										// 05/24/2024 Paul.  Just now including credit card years. 
+										using ( DataTable dt = this.CreditCardYears() )
+										{
+											List<string> layout = new List<string>();
+											objs.Add(L10n.NAME + ".credit_card_year", layout);
+											for ( int i = 0; i < dt.Rows.Count; i++ )
+											{
+												DataRow row = dt.Rows[i];
+												string sID = Sql.ToString(row["NAME"]);
 												layout.Add(sID);
 											}
 										}

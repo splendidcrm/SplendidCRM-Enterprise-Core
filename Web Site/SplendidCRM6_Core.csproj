@@ -96,6 +96,7 @@
     <None Include="Pages\Image.cshtml" />
     <None Include="Pages\Images\EmailImage.cshtml" />
     <None Include="Pages\Images\Image.cshtml" />
+    <None Include="Pages\Import\ExportModule.cshtml" />
     <None Include="Pages\Index.cshtml" />
     <None Include="Pages\Meetings\AcceptDecline.cshtml" />
     <None Include="Pages\Notes\Attachment.cshtml" />
@@ -146,5 +147,8 @@
     <Reference Include="UiPath.Workflow">
       <HintPath>..\BackupBinCore6\UiPath.Workflow.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Pages\Administration\" />
   </ItemGroup>
 </Project>

@@ -60,6 +60,7 @@ namespace SplendidCRM.Pages.Reports
 		public IActionResult OnGetAsync()
 		{
 			string sMessage = "Report not found.";
+			Response.ContentType = "text/plain";
 			try
 			{
 				Guid gID = Sql.ToGuid(Request.Query["ID"]);
@@ -111,7 +112,6 @@ namespace SplendidCRM.Pages.Reports
 				sMessage = ex.Message;
 			}
 			byte[] data = System.Text.Encoding.UTF8.GetBytes(sMessage);
-			Response.ContentType = "text/plain";
 			return File(data, Response.ContentType);
 		}
 	}

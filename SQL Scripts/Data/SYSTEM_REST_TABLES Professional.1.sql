@@ -274,7 +274,18 @@ exec dbo.spSYSTEM_REST_TABLES_InsertOnly null, 'spSURVEY_PAGES_MoveQuestion'    
 exec dbo.spSYSTEM_REST_TABLES_InsertOnly null, 'spSURVEYS_DeleteResults'         , 'spSURVEYS_DeleteResults'         , 'Surveys'                  , null                       , 0, null, 0, 0, null, 0, 'ID';
 
 -- 11/18/2021 Paul.  Add support for CreditCards. 
-exec dbo.spSYSTEM_REST_TABLES_InsertOnly null, 'CREDIT_CARDS'                    , 'vwCREDIT_CARDS'                  , 'CreditCards'              , null                       , 0, null, 0, 0, null, 0, 'ACCOUNT_ID';
+-- 05/24/2024 Paul.  No longer require ACCOUNT_ID to view credit card. 
+exec dbo.spSYSTEM_REST_TABLES_InsertOnly null, 'CREDIT_CARDS'                    , 'vwCREDIT_CARDS'                  , 'CreditCards'              , null                       , 0, null, 0, 0, null, 0, null;
+if exists(select * from SYSTEM_REST_TABLES where TABLE_NAME = 'CREDIT_CARDS' and REQUIRED_FIELDS = 'ACCOUNT_ID' and DELETED = 0) begin -- then
+	update SYSTEM_REST_TABLES
+	   set REQUIRED_FIELDS     = null
+	     , DATE_MODIFIED       = getdate()
+	     , DATE_MODIFIED_UTC   = getutcdate()
+	 where TABLE_NAME          = 'CREDIT_CARDS'
+	   and DELETED             = 0;
+end -- if;
+GO
+
 exec dbo.spSYSTEM_REST_TABLES_InsertOnly null, 'vwACCOUNTS_CREDIT_CARDS'         , 'vwACCOUNTS_CREDIT_CARDS'         , 'Accounts'                 , 'CreditCards'              , 0, null, 0, 0, null, 1, 'ACCOUNT_ID';
 GO
 

@@ -51,6 +51,7 @@ namespace SplendidCRM.Pages.Reports
 		public IActionResult OnGetAsync()
 		{
 			string sMessage = "Report not found.";
+			Response.ContentType = "text/plain";
 			try
 			{
 				Guid gID = Sql.ToGuid(Request.Query["ID"]);
@@ -171,7 +172,7 @@ namespace SplendidCRM.Pages.Reports
 							sb.AppendLine("");
 						}
 						
-						Response.ContentType = "text/sql";
+						Response.ContentType = "text/plain";
 						// 02/12/2021 Paul.  Default to .1.sql. 
 						Response.Headers.Add("Content-Disposition", "attachment;filename=" + Utils.ContentDispositionEncode(sFileName + ".1.sql"));
 						sMessage = sb.ToString();
@@ -188,7 +189,6 @@ namespace SplendidCRM.Pages.Reports
 				sMessage = ex.Message;
 			}
 			byte[] data = System.Text.Encoding.UTF8.GetBytes(sMessage);
-			Response.ContentType = "text/plain";
 			return File(data, Response.ContentType);
 		}
 	}

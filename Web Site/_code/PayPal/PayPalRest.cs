@@ -437,7 +437,8 @@ namespace SplendidCRM
 							{
 								string sADDRESS_STREET1 = String.Empty;
 								string sADDRESS_STREET2 = String.Empty;
-								string sADDRESS_STREET  = Sql.ToString  (rdr["ADDRESS_STREET" ]);
+								// 07/20/2024 Paul.  This should be SHIPPING_ADDRESS_STREET, not ADDRESS_STREET. 
+								string sADDRESS_STREET  = Sql.ToString  (rdr["SHIPPING_ADDRESS_STREET" ]);
 								string[] arrADDRESS_STREET = sADDRESS_STREET.Split(ControlChars.CrLf.ToCharArray());
 								sADDRESS_STREET1 = arrADDRESS_STREET[0];
 								if ( arrADDRESS_STREET.Length > 1 )
@@ -714,7 +715,8 @@ namespace SplendidCRM
 						SqlProcs.spPAYMENTS_TRANSACTIONS_InsertOnly
 							( ref gPAYMENTS_TRANSACTION_ID
 							, gPAYMENT_ID       // gPAYMENT_ID
-							, "PayTrace"        // PAYMENT_GATEWAY
+							// 07/20/2024 Paul.  Should be PayPal, not PayTrace. 
+							, "PayPal"          // PAYMENT_GATEWAY
 							, "Refund"          // TRANSACTION_TYPE
 							, dAMOUNT           // AMOUNT
 							, gCURRENCY_ID      // CURRENCY_ID

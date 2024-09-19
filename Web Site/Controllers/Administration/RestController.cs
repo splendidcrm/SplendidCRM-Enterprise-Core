@@ -1677,7 +1677,8 @@ namespace SplendidCRM.Controllers.Administration
 				}
 				case "tab"  :
 				{
-					sContentType = "text/txt";
+					// 08/17/2024 Paul.  The correct MIME type is text/plain. 
+					sContentType = "text/plain";
 					sExportTempFileName = Guid.NewGuid().ToString() + "_" + ModuleName + ".txt";
 					sExportTempPathName = Path.Combine(sTempPath, sExportTempFileName);
 					Session["TempFile." + sExportTempFileName] = sExportTempPathName;

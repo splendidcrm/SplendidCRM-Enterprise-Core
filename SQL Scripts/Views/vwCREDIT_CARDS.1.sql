@@ -30,6 +30,7 @@ GO
 -- 08/16/2015 Paul.  Add CARD_TOKEN for use with PayPal REST API. 
 -- 12/16/2015 Paul.  Add EMAIL and PHONE for Authorize.Net. 
 -- 11/30/2017 Paul.  Add ASSIGNED_SET_ID for Dynamic User Assignment. 
+-- 05/24/2024 Paul.  DATE_MODIFIED_UTC is needed by React Client. 
 Create View dbo.vwCREDIT_CARDS
 as
 select CREDIT_CARDS.ID
@@ -53,6 +54,7 @@ select CREDIT_CARDS.ID
      , CREDIT_CARDS.PHONE
      , CREDIT_CARDS.DATE_ENTERED
      , CREDIT_CARDS.DATE_MODIFIED
+     , CREDIT_CARDS.DATE_MODIFIED_UTC
      , ACCOUNTS.ID                    as ACCOUNT_ID
      , ACCOUNTS.NAME                  as ACCOUNT_NAME
      , ACCOUNTS.ASSIGNED_USER_ID      as ASSIGNED_USER_ID
