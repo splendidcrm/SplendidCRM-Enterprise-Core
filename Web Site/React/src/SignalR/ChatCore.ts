@@ -116,7 +116,8 @@ export class ChatServerCore
 		})
 		.then( () =>
 		{
-			this.started = false;
+			// 12/01/2024 Paul.  Set started flag. 
+			this.started = true;
 			console.log('ChatHub connection started');
 			this.joinGroup();
 		});
