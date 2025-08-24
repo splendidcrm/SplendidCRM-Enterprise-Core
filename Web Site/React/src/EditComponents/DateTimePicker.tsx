@@ -81,7 +81,8 @@ export default class DateTimePicker extends EditComponent<IDateTimePickerProps, 
 				console.warn((new Date()).toISOString() + ' ' + this.constructor.name + '.validate ' + DATA_FIELD);
 			}
 		}
-		if ( !bVALUE_MISSING && UI_REQUIRED )
+		// 08/11/2025 Paul.  Ignore second validity test for hidden field. 
+		if ( !this.props.bIsHidden && !bVALUE_MISSING && UI_REQUIRED )
 		{
 			let date: moment.Moment = moment(DATA_VALUE);
 			if ( !date.isValid() )

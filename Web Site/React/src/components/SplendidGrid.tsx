@@ -1980,7 +1980,8 @@ class SplendidGrid extends React.Component<ISplendidGridProps, ISplendidGridStat
 			{ from } - { to } { L10n.Term('.LBL_LIST_OF') } { totalSize }</span>);
 	}
 
-	private _onSelectionChanged = (row, isSelect, rowIndex, e) =>
+	// 06/21/2025 Paul.  A customer needs external access. 
+	public _onSelectionChanged = (row, isSelect, rowIndex, e) =>
 	{
 		const { selectionChanged } = this.props;
 		let { selectedItems, selectedKeys } = this.state;

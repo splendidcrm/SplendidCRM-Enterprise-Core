@@ -18,9 +18,9 @@
     <Copyright>Copyright (C) 2005-2024 SplendidCRM, Inc.  All rights reserved.</Copyright>
     <Authors>SplendidCRM Software, Inc.</Authors>
     <VersionSuffix>15.0.$([System.DateTime]::Now.ToString(yy))$([System.DateTime]::Now.DayOfYear.ToString(000)).$([System.DateTime]::Now.ToString(HHmm))</VersionSuffix>
-    <AssemblyVersion Condition=" '$(VersionSuffix)' == '' ">14.7.1.0</AssemblyVersion>
+    <AssemblyVersion Condition=" '$(VersionSuffix)' == '' ">15.1.0.0</AssemblyVersion>
     <AssemblyVersion Condition=" '$(VersionSuffix)' != '' ">$(VersionSuffix)</AssemblyVersion>
-    <Version Condition=" '$(VersionSuffix)' == '' ">14.7.1.0</Version>
+    <Version Condition=" '$(VersionSuffix)' == '' ">15.1.0.0</Version>
     <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionSuffix)</Version>
     <AssemblyName>SplendidCRM_Core</AssemblyName>
     <RootNamespace>SplendidCRM_Core</RootNamespace>
@@ -50,6 +50,7 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.7.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="4.7.0" />
     <PackageReference Include="Microsoft.Identity.Web" Version="1.22.1" />
+    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="6.34.0" />
     <PackageReference Include="Microsoft.IdentityModel.Protocols.WsFederation" Version="6.31.0" />
     <PackageReference Include="Microsoft.ML" Version="2.0.1" />
     <PackageReference Include="Mnt.Microsoft.Exchange.WebServices.Data" Version="2.2.1.1" />
@@ -59,6 +60,8 @@
     <PackageReference Include="System.CodeDom" Version="6.0.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.31.0" />
+    <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
+    <PackageReference Include="System.Text.Json" Version="5.0.2" />
     <PackageReference Include="Twilio" Version="6.8.0" />
   </ItemGroup>
 
@@ -150,5 +153,10 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Pages\Administration\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Administration\Impersonation.svc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

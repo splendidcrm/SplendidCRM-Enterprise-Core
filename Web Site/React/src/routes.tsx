@@ -73,6 +73,7 @@ import ACLRolesByUser                 from './ModuleViews/Administration/ACLRole
 import AdminRenameTabs                from './ModuleViews/Administration/RenameTabs/ListView'                      ;
 import AdminConfigureTabs             from './ModuleViews/Administration/ConfigureTabs/ListView'                   ;
 import GoogleConfigView               from './ModuleViews/Administration/Google/ConfigView'                        ;
+import DuoUniversalConfigView         from './ModuleViews/Administration/DuoUniversal/ConfigView'                  ;
 import SystemLogListView              from './ModuleViews/Administration/SystemLog/ListView'                       ;
 import SystemSyncLogListView          from './ModuleViews/Administration/SystemSyncLog/ListView'                   ;
 import WorkflowEventLogListView       from './ModuleViews/Administration/WorkflowEventLog/ListView'                ;
@@ -286,6 +287,9 @@ export function privateRoutes()
 		{ exact: true, path: "/Administration/Exchange/ConfigView"                      , Component: ExchangeConfigView             },
 		{ exact: true, path: "/Administration/Google/ConfigView"                        , Component: GoogleConfigView               },
 		{              path: "/Administration/Google"                                   , Component: GoogleConfigView               },
+		// 08/07/2025 Paul.  Add support for DuoUniversal. 
+		{ exact: true, path: "/Administration/DuoUniversal/ConfigView"                  , Component: DuoUniversalConfigView         },
+		{              path: "/Administration/DuoUniversal"                             , Component: DuoUniversalConfigView         },
 		{              path: "/Administration/ModuleBuilder"                            , Component: ModuleBuilderWizardView        },
 
 		{              path: "/Administration/Configurator"                             , Component: ConfiguratorAdminWizard        },

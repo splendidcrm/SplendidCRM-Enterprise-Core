@@ -503,3 +503,4 @@
 <asp:Image       SkinID="Watson"                   Width="16"  Height="16"  BorderWidth="0" ImageUrl="images/Watson.png"                   ImageAlign="AbsMiddle" runat="server" />
 <asp:Image       SkinID="DataPrivacy"              Width="16"  Height="16"  BorderWidth="0" ImageUrl="images/DataPrivacy.gif"              ImageAlign="AbsMiddle" runat="server" />
 <asp:Image       SkinID="PhoneBurner"              Width="16"  Height="16"  BorderWidth="0" ImageUrl="images/PhoneBurner.png"              ImageAlign="AbsMiddle" runat="server" />
+<asp:Image       SkinID="DuoUniversal"             Width="16"  Height="16"  BorderWidth="0" ImageUrl="images/DuoUniversal.png"             ImageAlign="AbsMiddle" runat="server" />

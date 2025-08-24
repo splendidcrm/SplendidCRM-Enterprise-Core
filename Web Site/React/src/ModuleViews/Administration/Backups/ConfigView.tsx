@@ -57,7 +57,7 @@ interface IAdminConfigViewState
 }
 
 @observer
-export default class BackupsConfigView extends React.Component<IAdminConfigViewProps, IAdminConfigViewState>
+class BackupsConfigView extends React.Component<IAdminConfigViewProps, IAdminConfigViewState>
 {
 	private _isMounted = false;
 	private headerButtons = React.createRef<HeaderButtons>();
@@ -319,3 +319,4 @@ export default class BackupsConfigView extends React.Component<IAdminConfigViewP
 	}
 }
 
+export default withRouter(BackupsConfigView);

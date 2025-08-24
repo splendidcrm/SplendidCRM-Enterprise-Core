@@ -12,7 +12,7 @@
 // 1. React and fabric. 
 import React from 'react';
 import qs from 'query-string';
-import { RouteComponentProps }                      from '../Router5'                         ;
+import { RouteComponentProps, withRouter }          from '../Router5'                         ;
 import { Modal }                                    from 'react-bootstrap'                          ;
 import { observer }                                 from 'mobx-react'                               ;
 import { FontAwesomeIcon }                          from '@fortawesome/react-fontawesome'           ;
@@ -67,7 +67,7 @@ interface IHubSpotConfigViewState
 }
 
 @observer
-export default class HubSpotConfigView extends React.Component<IHubSpotConfigViewProps, IHubSpotConfigViewState>
+class HubSpotConfigView extends React.Component<IHubSpotConfigViewProps, IHubSpotConfigViewState>
 {
 	private _isMounted = false;
 	private refMap: Record<string, React.RefObject<EditComponent<any, any>>>;
@@ -618,3 +618,4 @@ export default class HubSpotConfigView extends React.Component<IHubSpotConfigVie
 	}
 }
 
+export default withRouter(HubSpotConfigView);

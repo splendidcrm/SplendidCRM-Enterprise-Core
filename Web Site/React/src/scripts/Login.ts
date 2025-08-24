@@ -10,6 +10,7 @@
  */
 
 // 1. React and fabric. 
+import qs from 'query-string';
 // 2. Store and Types. 
 import SINGLE_SIGN_ON                               from '../types/SINGLE_SIGN_ON';
 // 3. Scripts. 
@@ -21,7 +22,9 @@ import { bMOBILE_CLIENT }                           from './SplendidInitUI'     
 import { SplendidUI_Init }                          from './SplendidInitUI'       ;
 import { CreateSplendidRequest, GetSplendidResult } from './SplendidRequest'      ;
 import SignalRStore                                 from '../SignalR/SignalRStore';
-import { Application_ClearStore, Application_UpdateStoreLastDate } from './Application'          ;
+import { jsonReactState, Application_ClearStore, Application_UpdateStoreLastDate, Application_GetReactLoginState } from './Application'          ;
+import { Crm_Config }                               from './Crm'                  ;
+import { StartsWith }                               from './utility'              ;
 
 // 07/01/2017 Paul.  Cache IsAuthenticated for 1 second. 
 let lastIsAuthenticated = 0;
@@ -195,6 +198,37 @@ export async function Logout(): Promise<any>
 	}
 }
 
+export async function Impersonate(row: any): Promise<any>
+{
+	// 08/22/2025 Paul.  Impersonate first so that exception will prevent reset of credentials. 
+	let data: any = { ID: row['ID'] } ;
+	let sBody: string = JSON.stringify(data);
+	let res = await CreateSplendidRequest('Administration/Impersonation.svc/Impersonate', 'POST', 'application/json; charset=utf-8', sBody);
+	let json = await GetSplendidResult(res);
+	if ( Sql.IsEmptyString(json.d) )
+	{
+		// 08/22/2025 Paul.  We can't use Logout as ADAL logout will redirect. 
+		//Logout();
+		try
+		{
+			SignalRStore.Shutdown();
+		}
+		catch(error)
+		{
+			console.error((new Date()).toISOString() + ' ' + 'Impersonate', error);
+		}
+		await Application_ClearStore();
+		Credentials.SetUSER_ID('');
+		Credentials.ClearStorage();
+		SplendidCache.Reset();
+		return json;
+	}
+	else
+	{
+		throw(json.d);
+	}
+}
+
 // 05/13/2018 Paul.  At some point we will change back to using the Credential values instead of the passed-in values. 
 export async function Login(username: string, password: string): Promise<any>
 {
@@ -206,7 +240,7 @@ export async function Login(username: string, password: string): Promise<any>
 	});
 	let res = await CreateSplendidRequest('Rest.svc/Login', 'POST', 'application/json; charset=UTF-8', sBody);
 	let json = await GetSplendidResult(res);
-	if ( json.d.length == 36 )
+	if ( json.d.length == 36 && !StartsWith(json.d, 'https://') )
 	{
 		lastIsAuthenticated = 0;
 		// 05/13/2018 Paul.  We will likely want to move the location where we save the credentials. 
@@ -223,8 +257,37 @@ export async function Login(username: string, password: string): Promise<any>
 		//window.addEventListener("beforeunload", beforeUnloadListener);
 		return Credentials.sUSER_ID;
 	}
+	// 08/07/2025 Paul.  Add support for DuoUniversal. 
+	else if ( Crm_Config.ToBoolean('DuoUniversal.Enabled') && StartsWith(json.d, 'https://') )
+	{
+		return json.d;
+	}
 	else
 	{
+		console.error((new Date()).toISOString() + ' ' + 'Login', json.d);
+		throw new Error('Login should return Guid.');
+	}
+}
+
+// 08/07/2025 Paul.  Add support for DuoUniversal. 
+export async function LoginDuoUniversal(code: string, state: string): Promise<any>
+{
+	var sBody = JSON.stringify({
+		'code': code,
+		'state': state,
+		'MobileClient': Credentials.bMOBILE_CLIENT,
+		'Version': '15.0'
+	});
+	let res = await CreateSplendidRequest('Rest.svc/LoginDuoUniversal', 'POST', 'application/json; charset=UTF-8', sBody);
+	let json = await GetSplendidResult(res);
+	if ( json.d.length == 36 )
+	{
+		lastIsAuthenticated = 0;
+		return json.d;
+	}
+	else
+	{
+		console.error((new Date()).toISOString() + ' ' + 'LoginDuoUniversal', json.d);
 		throw new Error('Login should return Guid.');
 	}
 }
@@ -343,8 +406,16 @@ export async function SingleSignOnSettings(): Promise<SINGLE_SIGN_ON>
 
 export function LoginRedirect(history, sFrom)
 {
-	//console.log((new Date()).toISOString() + ' ' + 'LoginRedirect', sFrom);
-	history.push('/login');
+	//console.log((new Date()).toISOString() + ' ' + 'LoginRedirect', sFrom, location.search);
+	// 08/23/2025 Paul.  Need to preserve DuoUniversal code and state on Core. 
+	if ( sFrom == 'PrivateRouteFC' && location.search && StartsWith(location.search, '?state=') )
+	{
+		history.push('/login' + location.search);
+	}
+	else
+	{
+		history.push('/login');
+	}
 }
 
 export async function GetUserProfile(): Promise<any>

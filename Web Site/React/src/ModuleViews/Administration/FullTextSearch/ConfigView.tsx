@@ -59,7 +59,7 @@ interface IAdminConfigViewState
 }
 
 @observer
-export default class FullTextSearchConfigView extends React.Component<IAdminConfigViewProps, IAdminConfigViewState>
+class FullTextSearchConfigView extends React.Component<IAdminConfigViewProps, IAdminConfigViewState>
 {
 	private _isMounted = false;
 	private headerButtons = React.createRef<HeaderButtons>();
@@ -428,3 +428,4 @@ export default class FullTextSearchConfigView extends React.Component<IAdminConf
 	}
 }
 
+export default withRouter(FullTextSearchConfigView);

@@ -91,7 +91,8 @@ export default class TextBox extends EditComponent<IEditComponentProps, ITextBox
 			}
 		}
 		// 10/05/2021 Paul.  Add support for regular expression validation. 
-		if ( this.HasValidatorFailed(DATA_VALUE) )
+		// 08/11/2025 Paul.  Ignore second validity test for hidden field. 
+		if ( !this.props.bIsHidden && this.HasValidatorFailed(DATA_VALUE) )
 		{
 			bVALUE_MISSING = true;
 			this.setState({VALUE_MISSING: bVALUE_MISSING, VALIDATOR_FAILED: true});

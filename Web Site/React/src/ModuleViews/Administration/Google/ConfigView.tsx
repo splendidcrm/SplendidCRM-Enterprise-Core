@@ -61,7 +61,7 @@ interface IAdminConfigViewState
 }
 
 @observer
-export default class GoogleConfigView extends React.Component<IAdminConfigViewProps, IAdminConfigViewState>
+class GoogleConfigView extends React.Component<IAdminConfigViewProps, IAdminConfigViewState>
 {
 	private _isMounted = false;
 	private refMap: Record<string, React.RefObject<EditComponent<any, any>>>;
@@ -540,3 +540,4 @@ export default class GoogleConfigView extends React.Component<IAdminConfigViewPr
 	}
 }
 
+export default withRouter(GoogleConfigView);

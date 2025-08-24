@@ -98,6 +98,7 @@ import TasksEditView             from './Tasks/EditView'            ;
 import ThreadsEditView           from './Threads/EditView'          ;
 import UsersDetailView           from './Users/DetailView'          ;
 import UsersEditView             from './Users/EditView'            ;
+import UsersListView             from './Administration/Users/ListView';
 import UsersPopupView            from './Users/PopupView'           ;
 import UsersLogins               from './Users/UsersLogins'         ;
 import UsersACLRoles             from './Users/UsersACLRoles'       ;
@@ -161,6 +162,7 @@ import UserLoginsListView                from './Administration/UserLogins/ListV
 // Cloud services
 import ExchangeConfigView                from './Administration/Exchange/ConfigView'               ;
 import GoogleConfigView                  from './Administration/Google/ConfigView'                 ;
+import DuoUniversalConfigView            from './Administration/DuoUniversal/ConfigView'           ;
 import AsteriskListView                  from './Administration/Asterisk/ListView'                 ;
 import AsteriskDetailView                from './Administration/Asterisk/DetailView'               ;
 import AvayaListView                     from './Administration/Avaya/ListView'                    ;
@@ -344,6 +346,7 @@ export default function ModuleViewFactory(sLAYOUT_NAME: string)
 		case 'UserSignatures.EditView'   :  view = UserSignaturesEditView   ;  break;
 		case 'UserSignatures.ListView'   :  view = UserSignaturesListView   ;  break;
 		// Administration 
+		case 'Users.ListView'                   :  view = UsersListView            ;  break;
 		case 'Dropdown.ListView'                :  view = DropdownListView         ;  break;
 		case 'Dropdown.EditView'                :  view = DropdownEditView         ;  break;
 		case 'Regions.Countries'                :  view = RegionsCountries         ;  break;
@@ -403,6 +406,8 @@ export default function ModuleViewFactory(sLAYOUT_NAME: string)
 		case 'EmailMan.ConfigView'              :  view = EmailManConfigView              ;  break;
 		case 'Exchange.ConfigView'              :  view = ExchangeConfigView              ;  break;
 		case 'Google.ConfigView'                :  view = GoogleConfigView                ;  break;
+		// 08/07/2025 Paul.  Add support for DuoUniversal. 
+		case 'DuoUniversal.ConfigView'          :  view = DuoUniversalConfigView          ;  break;
 		case 'Facebook.ConfigView'              :  view = AdminConfigView                 ;  break;
 		case 'LinkedIn.ConfigView'              :  view = AdminConfigView                 ;  break;
 		case 'Salesforce.ConfigView'            :  view = AdminConfigView                 ;  break;

@@ -11,6 +11,7 @@
 
 // 1. React and fabric. 
 import * as React from 'react';
+import qs from 'query-string';
 import { RouteComponentProps, withRouter }           from '../Router5'              ;
 import { FontAwesomeIcon }                           from '@fortawesome/react-fontawesome';
 import { observer }                                  from 'mobx-react'                    ;
@@ -24,7 +25,7 @@ import AuthenticationContext                         from '../scripts/adal'     
 import SplendidCache                                 from '../scripts/SplendidCache'      ;
 import { EndsWith, Trim, screenWidth, screenHeight } from '../scripts/utility'            ;
 import { Crm_Config }                                from '../scripts/Crm'                ;
-import { Login, ForgotPassword, IsAuthenticated }    from '../scripts/Login'              ;
+import { Login, ForgotPassword, IsAuthenticated, LoginDuoUniversal }  from '../scripts/Login';
 import { Application_GetReactLoginState }            from '../scripts/Application'        ;
 import { AppName, AppVersion }                       from '../AppVersion'                 ;
 // 4. Components and Views. 
@@ -69,6 +70,7 @@ class LoginView extends React.Component<ILoginViewProps, ILoginViewState>
 		{
 			Credentials.SetREMOTE_SERVER(REMOTE_SERVER);
 		}
+		//console.log((new Date()).toISOString() + ' ' + this.constructor.name + '.constructor', location.search);
 		this.state =
 		{
 			REMOTE_SERVER        ,
@@ -115,6 +117,7 @@ class LoginView extends React.Component<ILoginViewProps, ILoginViewState>
 			}
 			// 06/23/2019 Paul.  IsAuthenticated will catch any errors and return simple true/false. 
 			let bAuthenticated: boolean = await IsAuthenticated(this.constructor.name + '.componentDidMount');
+			//console.log((new Date()).toISOString() + ' ' + this.constructor.name + '.componentDidMount bAuthenticated', bAuthenticated);
 			if ( bAuthenticated )
 			{
 				let sLastActiveModule = Sql.ToString(localStorage.getItem('ReactLastActiveModule'));
@@ -130,6 +133,9 @@ class LoginView extends React.Component<ILoginViewProps, ILoginViewState>
 			}
 			else
 			{
+				let queryParams: any  = qs.parse(location.search);
+				//console.log((new Date()).toISOString() + ' ' + this.constructor.name + '.componentDidMount DuoUniversal.Enabled', Crm_Config.ToBoolean('DuoUniversal.Enabled'));
+				//console.log((new Date()).toISOString() + ' ' + this.constructor.name + '.componentDidMount queryParams', queryParams);
 				// 06/24/2019 Paul.  SingleSigneOn data is now returnd in the ReactLoginState to reduce the requests. 
 				// https://hjnilsson.com/2016/07/20/authenticated-azure-cors-request-with-active-directory-and-adal-js/
 				//let oSingleSignOnContext = await SingleSignOnSettings();
@@ -137,6 +143,28 @@ class LoginView extends React.Component<ILoginViewProps, ILoginViewState>
 				if ( oSingleSignOnContext != null && !Sql.IsEmptyString(oSingleSignOnContext.instance) )
 				{
 					this.initSingleSignOn(oSingleSignOnContext);
+				}
+				// 08/07/2025 Paul.  Add support for DuoUniversal. 
+				else if ( Crm_Config.ToBoolean('DuoUniversal.Enabled') && !Sql.IsEmptyString(queryParams['code' ]) && !Sql.IsEmptyString(queryParams['state']) )
+				{
+					let code : string = Sql.ToString(queryParams['code' ]);
+					let state: string = Sql.ToString(queryParams['state']);
+					await LoginDuoUniversal(code, state);
+					const status = await IsAuthenticated(this.constructor.name + '.componentDidMount');
+					if ( status )
+					{
+						let sLastActiveModule = Sql.ToString(localStorage.getItem('ReactLastActiveModule'));
+						if ( Sql.IsEmptyString(sLastActiveModule) )
+						{
+							sLastActiveModule = '/Home';
+						}
+						if ( !StartsWith(sLastActiveModule, '/') )
+						{
+							sLastActiveModule = '/' + sLastActiveModule;
+						}
+						//console.log((new Date()).toISOString() + ' ' + this.constructor.name + '.componentDidMount sLastActiveModule', sLastActiveModule);
+						history.push('/Reload' + sLastActiveModule);
+					}
 				}
 				else
 				{
@@ -267,6 +295,7 @@ class LoginView extends React.Component<ILoginViewProps, ILoginViewState>
 	{
 		const { REMOTE_SERVER, USER_NAME, PASSWORD } = this.state;
 		const { history, location } = this.props;
+		//console.log((new Date()).toISOString() + ' ' + this.constructor.name + '.handleOnSubmit');
 		if ( e != null )
 		{
 			e.preventDefault();
@@ -274,8 +303,26 @@ class LoginView extends React.Component<ILoginViewProps, ILoginViewState>
 		this.setState({ loggingIn: true });
 		try
 		{
-			// 05/18/2019 Paul.  Login will call SplendidUI_Init(). 
-			await Login(USER_NAME, PASSWORD);
+			// 08/07/2025 Paul.  Add support for DuoUniversal. 
+			if ( Crm_Config.ToBoolean('DuoUniversal.Enabled') )
+			{
+				const redirectUrl = await Login(USER_NAME, PASSWORD);
+				if ( StartsWith(redirectUrl, 'https://') )
+				{
+					window.location.href = redirectUrl;
+				}
+				else
+				{
+					L10n.Term('DuoUniversal.ERR_NOT_CONFIGURED')
+				}
+				return;
+			}
+			else
+			{
+				// 05/18/2019 Paul.  Login will call SplendidUI_Init(). 
+				// 08/07/2025 Paul.  Actually, IsAuthenticated calls SplendidUI_Init(). 
+				await Login(USER_NAME, PASSWORD);
+			}
 			//console.log((new Date()).toISOString() + ' ' + this.constructor.name + '.handleOnSubmit Login complete');
 
 			// 08/14/2020 Paul.  On android, we don't seem to be getting an exception with a login failure. 

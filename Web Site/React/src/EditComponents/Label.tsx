@@ -24,6 +24,12 @@ import { StartsWith, EndsWith, Trim }         from '../scripts/utility'      ;
 import { FromJsonDate, formatCurrency }       from '../scripts/Formatting'   ;
 // 4. Components and Views. 
 
+interface ILabelComponentProps extends IEditComponentProps
+{
+	// 06/21/2025 Paul.  Treat string as html. 
+	html?       : boolean;
+}
+
 interface ILabelState
 {
 	ID               : string ;
@@ -35,9 +41,11 @@ interface ILabelState
 	CSS_CLASS?       : string;
 	// 11/24/2021 Paul.  Provide a way to turn text into a hyperlink. 
 	URL?             : string;
+	// 06/21/2025 Paul.  Treat string as html. 
+	html?       : boolean;
 }
 
-export default class Label extends React.PureComponent<IEditComponentProps, ILabelState>
+export default class Label extends React.PureComponent<ILabelComponentProps, ILabelState>
 {
 	public get data(): any
 	{
@@ -64,13 +72,18 @@ export default class Label extends React.PureComponent<IEditComponentProps, ILab
 		{
 			this.setState({ URL: DATA_VALUE });
 		}
+		// 06/21/2025 Paul.  Treat string as html. 
+		else if ( PROPERTY_NAME == 'html' )
+		{
+			this.setState({ html: DATA_VALUE });
+		}
 	}
 
 	public clear(): void
 	{
 	}
 
-	constructor(props: IEditComponentProps)
+	constructor(props: ILabelComponentProps)
 	{
 		super(props);
 		let FIELD_INDEX      : number  = 0;
@@ -81,6 +94,7 @@ export default class Label extends React.PureComponent<IEditComponentProps, ILab
 		let LIST_NAME        : string  = '';
 		let DISPLAY_NAME     : any     = null;
 		let CSS_CLASS        : string = 'dataLabel';
+		let html             : boolean = props.html;
 
 		let ID: string = null;
 		try
@@ -353,6 +367,12 @@ export default class Label extends React.PureComponent<IEditComponentProps, ILab
 										DATA_VALUE   = FromJsonDate(DATA_VALUE, Security.USER_DATE_FORMAT() + ' ' + Security.USER_TIME_FORMAT());
 										DISPLAY_NAME = DATA_FORMAT.replace('{0}', DATA_VALUE);
 									}
+									// 06/21/2025 Paul.  Treat string as html. 
+									else if ( html )
+									{
+										// 03/29/2021 Paul.  Do not replace entities as string will be raw html. 
+										DISPLAY_NAME = DATA_FORMAT.replace('{0}', DATA_VALUE);
+									}
 									else
 									{
 										// 08/26/2014 Paul.  Text with angle brackets (such as an email), will generate an error when used with innerHTML. 
@@ -402,6 +422,7 @@ export default class Label extends React.PureComponent<IEditComponentProps, ILab
 			DATA_FORMAT ,
 			DISPLAY_NAME,
 			CSS_CLASS   ,
+			html        ,
 		};
 	}
 
@@ -415,7 +436,7 @@ export default class Label extends React.PureComponent<IEditComponentProps, ILab
 	}
 
 	// shouldComponentUpdate is not used with a PureComponent
-	shouldComponentUpdate(nextProps: IEditComponentProps, nextState: ILabelState)
+	shouldComponentUpdate(nextProps: ILabelComponentProps, nextState: ILabelState)
 	{
 		if ( nextProps.row != this.props.row )
 		{
@@ -448,6 +469,12 @@ export default class Label extends React.PureComponent<IEditComponentProps, ILab
 			//console.log((new Date()).toISOString() + ' ' + this.constructor.name + '.shouldComponentUpdate ' + DATA_FIELD, CSS_CLASS, nextProps, nextState);
 			return true;
 		}
+		// 06/21/2025 Paul.  Treat string as html. 
+		else if ( nextState.html != this.state.html)
+		{
+			//console.log((new Date()).toISOString() + ' ' + this.constructor.name + '.shouldComponentUpdate ' + DATA_FIELD, CSS_CLASS, nextProps, nextState);
+			return true;
+		}
 		return false;
 	}
 
@@ -470,7 +497,7 @@ export default class Label extends React.PureComponent<IEditComponentProps, ILab
 	public render()
 	{
 		const { baseId, layout, row, onChanged } = this.props;
-		const { ID, FIELD_INDEX, DATA_FIELD, DATA_LABEL, DISPLAY_NAME, CSS_CLASS, URL } = this.state;
+		const { ID, FIELD_INDEX, DATA_FIELD, DATA_LABEL, DISPLAY_NAME, CSS_CLASS, URL, html } = this.state;
 		//console.log((new Date()).toISOString() + ' ' + this.constructor.name + '.render ' + DATA_FIELD, URL);
 		try
 		{
@@ -506,6 +533,11 @@ export default class Label extends React.PureComponent<IEditComponentProps, ILab
 				>
 					{ DISPLAY_NAME }
 				</a>);
+			}
+			// 06/21/2025 Paul.  Treat string as html. 
+			else if ( html )
+			{
+				return (<div dangerouslySetInnerHTML={ {__html: DISPLAY_NAME } }></div>);
 			}
 			else
 			{

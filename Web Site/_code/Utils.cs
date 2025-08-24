@@ -734,7 +734,8 @@ namespace SplendidCRM
 				string sServerScheme    = Sql.ToString(Application["ServerScheme"   ]);
 				string sServerName      = Sql.ToString(Application["ServerName"     ]);
 				string sApplicationPath = Sql.ToString(Application["ApplicationPath"]);
-				sSiteURL = sServerScheme + "://" + sServerName + sApplicationPath;
+				string sServerPort      = Sql.ToString(Application["ServerPort"     ]);
+				sSiteURL = sServerScheme + "://" + sServerName + sServerPort + sApplicationPath;
 			}
 			if ( !sSiteURL.StartsWith("http") )
 				sSiteURL = "http://" + sSiteURL;

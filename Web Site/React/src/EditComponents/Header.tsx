@@ -94,6 +94,16 @@ export default class Header extends React.PureComponent<IEditComponentProps, IHe
 		};
 	}
 
+	// 06/21/2025 Paul.  A customer needs the ability to customize the background of the header. 
+	async componentDidMount()
+	{
+		const { layout } = this.props;
+		if ( this.props.fieldDidMount )
+		{
+			this.props.fieldDidMount(layout.DATA_LABEL, this);
+		}
+	}
+
 	shouldComponentUpdate(nextProps: IEditComponentProps, nextState: IHeaderState)
 	{
 		if ( nextState.CSS_CLASS != this.state.CSS_CLASS )

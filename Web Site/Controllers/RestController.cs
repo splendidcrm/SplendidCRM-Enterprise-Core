@@ -37,8 +37,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using DocumentFormat.OpenXml.InkML;
-using System.Drawing.Text;
+
+using DuoUniversal;
+
 
 namespace SplendidCRM.Controllers
 {
@@ -348,12 +349,42 @@ namespace SplendidCRM.Controllers
 			public bool   MobileClient { get; set; }
 		}
 
+		public class LoginDuoParameters
+		{
+			public string  state        { get; set; }
+			public string  code         { get; set; }
+			public string? Version      { get; set; }
+			public bool  ? MobileClient { get; set; }
+		}
+
 		#region Login
+		private string GetDuoRedirectUrl()
+		{
+			string sServerScheme    = Sql.ToString(Application["ServerScheme"   ]);
+			string sServerName      = Sql.ToString(Application["ServerName"     ]);
+			string sApplicationPath = Sql.ToString(Application["ApplicationPath"]);
+			string sServerPort      = Sql.ToString(Application["ServerPort"     ]);
+			string sSiteURL         = sServerScheme + "://" + sServerName + sServerPort + sApplicationPath;
+			if ( !sSiteURL.StartsWith("http") )
+				sSiteURL = "http://" + sSiteURL;
+			if ( !sSiteURL.EndsWith("/") )
+				sSiteURL += "/";
+
+			string sRedirectURL = sSiteURL;
+			if ( sServerName != "localhost" )
+			{
+				sRedirectURL  = Config.SiteURL();
+			}
+			sRedirectURL += "React/Login";
+			return sRedirectURL;
+		}
+
+
 		[AllowAnonymous]
 		[DotNetLegacyData]
 		[HttpPost("[action]")]
 		// 05/02/2017 Paul.  Need a separate flag for the mobile client. 
-		public async Task<Guid> Login([FromBody] LoginParameters input)
+		public async Task<string> Login([FromBody] LoginParameters input)
 		{
 			// 11/05/2018 Paul.  Protect against null inputs. 
 			string sUSER_NAME   = Sql.ToString (input.UserName    );
@@ -392,6 +423,41 @@ namespace SplendidCRM.Controllers
 				if ( !Sql.IsEmptyGuid(gUSER_ID) )
 				{
 					SplendidInit.LoginUser(gUSER_ID, "Azure AD");
+				}
+			}
+			// 08/07/2025 Paul.  Add support for DuoUniversal. 
+			else if ( Sql.ToBoolean(Application["CONFIG.DuoUniversal.Enabled"]) )
+			{
+				L10N L10n = new L10N("en-US");
+				string sDuoUniversalClientID     = Sql.ToString (Application["CONFIG.DuoUniversal.ClientID"    ]);
+				string sDuoUniversalClientSecret = Sql.ToString (Application["CONFIG.DuoUniversal.ClientSecret"]);
+				string sDuoUniversalApiHostURL   = Sql.ToString (Application["CONFIG.DuoUniversal.ApiHostURL"  ]);
+				if ( !Sql.IsEmptyString(sDuoUniversalClientID) && !Sql.IsEmptyString(sDuoUniversalClientID) && !Sql.IsEmptyString(sDuoUniversalClientSecret) && !Sql.IsEmptyString(sDuoUniversalApiHostURL) )
+				{
+					gUSER_ID = SplendidInit.VerifyUser(sUSER_NAME, sPASSWORD, String.Empty);
+					if ( !Sql.IsEmptyGuid(gUSER_ID) )
+					{
+						string sRedirectURL = GetDuoRedirectUrl();
+						Client duoClient = new DuoUniversal.ClientBuilder(sDuoUniversalClientID, sDuoUniversalClientSecret, sDuoUniversalApiHostURL, sRedirectURL).Build();
+						bool healthy = await duoClient.DoHealthCheck();
+						if ( healthy )
+						{
+							string state = DuoUniversal.Client.GenerateState();
+							Session["DuoUniversal.state"   ] = state;
+							Session["DuoUniversal.username"] = sUSER_NAME;
+							Session["DuoUniversal.UserID"  ] = gUSER_ID.ToString();
+							string sDuoUniversalLoginURL = duoClient.GenerateAuthUri(sUSER_NAME, state);
+							return sDuoUniversalLoginURL;
+						}
+						else
+						{
+							throw(new Exception(L10n.Term("DuoUniversal.ERR_FAILED_HEALTH_CHECK")));
+						}
+					}
+				}
+				else
+				{
+					throw(new Exception(L10n.Term("DuoUniversal.ERR_NOT_CONFIGURED")));
 				}
 			}
 			// 05/16/2020 Paul.  Allow Windows Authentication using same login method. 
@@ -488,7 +554,85 @@ namespace SplendidCRM.Controllers
 			ClaimsPrincipal principal = new ClaimsPrincipal(identity);
 			await Microsoft.AspNetCore.Authentication.AuthenticationHttpContextExtensions.SignInAsync(HttpContext, CookieAuthenticationDefaults.AuthenticationScheme, principal);
 			
-			return gUSER_ID;
+			return gUSER_ID.ToString();
+		}
+
+		[AllowAnonymous]
+		[DotNetLegacyData]
+		[HttpPost("[action]")]
+		// 08/07/2025 Paul.  Add support for DuoUniversal. 
+		public async Task<string> LoginDuoUniversal([FromBody] LoginDuoParameters input)
+		{
+			string sDuoUniversalReceievedState = Sql.ToString(input.state);
+			string sDuoUniversalReceivedCode   = Sql.ToString(input.code);
+			string sUSER_NAME   = Sql.ToString(Session["DuoUniversal.username"]);
+			string sVERSION     = Sql.ToString(input.Version );
+			Guid gUSER_ID       = Guid.Empty;
+			bool bMOBILE_CLIENT = Sql.ToBoolean(input.MobileClient);
+			
+			if ( Sql.ToBoolean(Application["CONFIG.DuoUniversal.Enabled"]) )
+			{
+				L10N L10n = new L10N("en-US");
+				string sDuoUniversalClientID     = Sql.ToString (Application["CONFIG.DuoUniversal.ClientID"    ]);
+				string sDuoUniversalClientSecret = Sql.ToString (Application["CONFIG.DuoUniversal.ClientSecret"]);
+				string sDuoUniversalApiHostURL   = Sql.ToString (Application["CONFIG.DuoUniversal.ApiHostURL"  ]);
+				if ( !Sql.IsEmptyString(sDuoUniversalClientID) && !Sql.IsEmptyString(sDuoUniversalClientID) && !Sql.IsEmptyString(sDuoUniversalClientSecret) && !Sql.IsEmptyString(sDuoUniversalApiHostURL) )
+				{
+					if ( !Sql.IsEmptyString(sDuoUniversalReceievedState) && !Sql.IsEmptyString(sDuoUniversalReceivedCode) )
+					{
+						string sDuoUniversalSessionState    = Sql.ToString(Session["DuoUniversal.state"   ]);
+						string sDuoUniversalSessionUsername = Sql.ToString(Session["DuoUniversal.username"]);
+						string sDuoUniversalSessionUserID   = Sql.ToString(Session["DuoUniversal.UserID"  ]);
+						if ( !Sql.IsEmptyString(sDuoUniversalSessionUsername) && !Sql.IsEmptyString(sDuoUniversalSessionState) && !Sql.IsEmptyGuid(sDuoUniversalSessionUserID) )
+						{
+							if ( sDuoUniversalSessionState == sDuoUniversalReceievedState )
+							{
+								string sRedirectURL = GetDuoRedirectUrl();
+								Client duoClient = new DuoUniversal.ClientBuilder(sDuoUniversalClientID, sDuoUniversalClientSecret, sDuoUniversalApiHostURL, sRedirectURL).Build();
+								IdToken token = await duoClient.ExchangeAuthorizationCodeFor2faResult(sDuoUniversalReceivedCode, sDuoUniversalSessionUsername);
+								if ( token.AuthResult.Result == "allow" )
+								{
+									gUSER_ID = Sql.ToGuid(sDuoUniversalSessionUserID);
+									SplendidInit.LoginUser(gUSER_ID, "DuoUniversal");
+								}
+								else
+								{
+									throw(new Exception(L10n.Term("DuoUniversal.ERR_LOGIN_DENIED")));
+								}
+							}
+							else
+							{
+								throw(new Exception(L10n.Term("DuoUniversal.ERR_INVALID_SESSION_STATE")));
+							}
+						}
+						else
+						{
+							throw(new Exception(L10n.Term("DuoUniversal.ERR_LOGIN_SESSION_HAS_EXPIRED")));
+						}
+					}
+					Session.Remove("DuoUniversal.state"   );
+					Session.Remove("DuoUniversal.username");
+					Session.Remove("DuoUniversal.UserID"  );
+				}
+				else
+				{
+					throw(new Exception(L10n.Term("DuoUniversal.ERR_NOT_CONFIGURED")));
+				}
+			}
+			if ( Sql.IsEmptyGuid(gUSER_ID) )
+			{
+				SplendidError.SystemWarning(new StackTrace(true).GetFrame(0), "Invalid username and/or password for " + sUSER_NAME);
+				throw(new Exception("Invalid username and/or password for " + sUSER_NAME));
+			}
+
+			// 08/22/2025 Paul.  We are now using the Identity to take advantage of [Authorize] attribute. 
+			List<Claim> claims = new List<Claim>();
+			claims.Add(new Claim(ClaimTypes.NameIdentifier, gUSER_ID.ToString()));
+			ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+			ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+			await Microsoft.AspNetCore.Authentication.AuthenticationHttpContextExtensions.SignInAsync(HttpContext, CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+			return gUSER_ID.ToString();
 		}
 
 		// 02/18/2020 Paul.  Allow React Client to forget password. 

@@ -2637,6 +2637,8 @@ namespace SplendidCRM.Controllers.Administration
 							, new AdminModule(L10n, "Pardot"                , "Pardot.LBL_MANAGE_PARDOT_TITLE"                   , "Pardot.LBL_MANAGE_PARDOT"                   , "DetailView"           , "Pardot.png"         )
 							, new AdminModule(L10n, "Watson"                , "Watson.LBL_MANAGE_WATSON_TITLE"                   , "Watson.LBL_MANAGE_WATSON"                   , "DetailView"           , "Watson.png"         )
 							, new AdminModule(L10n, "PhoneBurner"           , "PhoneBurner.LBL_MANAGE_PHONEBURNER_TITLE"         , "PhoneBurner.LBL_MANAGE_PHONEBURNER"         , "DetailView"           , "PhoneBurner.png"    )
+							// 08/07/2025 Paul.  Add support for DuoUniversal. 
+							, new AdminModule(L10n, "DuoUniversal"          , "DuoUniversal.LBL_MANAGE_DUO_UNIVERSAL_TITLE"      , "DuoUniversal.LBL_MANAGE_DUO_UNIVERSAL"      , "ConfigView"           , "DuoUniversal.png"   )
 							};
 							BuildAdminModules(L10n, objs, "CloudView", "Administration.LBL_CLOUD_SERVICES_TITLE", arrCloudView);
 							break;
