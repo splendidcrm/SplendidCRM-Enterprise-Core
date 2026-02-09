@@ -185,6 +185,7 @@ namespace SplendidCRM
 			services.AddScoped<LanguagePackImport>();
 			services.AddScoped<SyncError>();
 			services.AddScoped<ArchiveExternalDB>();
+			services.AddScoped<ReplicationExternalDB>();
 			services.AddScoped<SplendidExport>();
 			services.AddScoped<SplendidImport>();
 			services.AddScoped<ArchiveUtils>();

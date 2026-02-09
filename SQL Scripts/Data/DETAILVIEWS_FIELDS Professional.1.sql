@@ -1471,6 +1471,23 @@ if not exists(select * from DETAILVIEWS_FIELDS where DETAIL_NAME = 'PayPal.Detai
 end -- if;
 GO
 
+-- 12/31/2025 Paul.  Add Replication. 
+-- delete from DETAILVIEWS_FIELDS where DETAIL_NAME = 'ReplicationTables.DetailView';
+if not exists(select * from DETAILVIEWS_FIELDS where DETAIL_NAME = 'ReplicationTables.DetailView' and DELETED = 0) begin -- then
+	print 'DETAILVIEWS_FIELDS ReplicationTables.DetailView';
+	exec dbo.spDETAILVIEWS_InsertOnly          'ReplicationTables.DetailView', 'ReplicationTables', 'vwREPLICATION_TABLES', '15%', '35%', 2;
+	exec dbo.spDETAILVIEWS_FIELDS_InsBound     'ReplicationTables.DetailView', -1, 'ReplicationTables.LBL_TABLE_NAME'           , 'TABLE_NAME'           , '{0}'        , null;
+	exec dbo.spDETAILVIEWS_FIELDS_InsBoundList 'ReplicationTables.DetailView', -1, 'ReplicationTables.LBL_STATUS'               , 'STATUS'               , '{0}'        , 'replication_status_dom' , null;
+	exec dbo.spDETAILVIEWS_FIELDS_InsBound     'ReplicationTables.DetailView', -1, 'ReplicationTables.LBL_LOCAL_COUNT'          , 'LOCAL_COUNT'          , '{0}'        , null;
+	exec dbo.spDETAILVIEWS_FIELDS_InsBound     'ReplicationTables.DetailView', -1, 'ReplicationTables.LBL_REMOTE_COUNT'         , 'REMOTE_COUNT'         , '{0}'        , null;
+	exec dbo.spDETAILVIEWS_FIELDS_InsBound     'ReplicationTables.DetailView', -1, 'ReplicationTables.LBL_LOCAL_LAST_MODIFIED'  , 'LOCAL_LAST_MODIFIED'  , '{0}'        , null;
+	exec dbo.spDETAILVIEWS_FIELDS_InsBound     'ReplicationTables.DetailView', -1, 'ReplicationTables.LBL_REMOTE_LAST_MODIFIED' , 'REMOTE_LAST_MODIFIED' , '{0}'        , null;
+	exec dbo.spDETAILVIEWS_FIELDS_InsBound     'ReplicationTables.DetailView', -1, 'ReplicationTables.LBL_PENDING_COUNT'        , 'PENDING_COUNT'        , '{0}'        , null;
+	exec dbo.spDETAILVIEWS_FIELDS_InsBlank     'ReplicationTables.DetailView', -1, null;
+	exec dbo.spDETAILVIEWS_FIELDS_InsBound     'ReplicationTables.DetailView', -1, 'ReplicationTables.LBL_LAST_ERROR'           , 'LAST_ERROR'           , '{0}'        , 3;
+end -- if;
+GO
+
 
 set nocount off;
 GO

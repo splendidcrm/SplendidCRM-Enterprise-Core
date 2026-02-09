@@ -62,7 +62,7 @@ namespace SplendidCRM
 			return Strings.Space(nNumber).Replace(' ', '\t');
 		}
 
-		private string CsDataType(string sDATA_TYPE)
+		public string CsDataType(string sDATA_TYPE)
 		{
 			string sCOLUMN_TYPE = String.Empty;
 			switch ( sDATA_TYPE )
@@ -118,7 +118,7 @@ namespace SplendidCRM
 			return sCOLUMN_TYPE;
 		}
 
-		private string BuildArchiveTable(string sTABLE_NAME)
+		public string BuildArchiveTable(string sTABLE_NAME)
 		{
 			sTABLE_NAME = sTABLE_NAME.ToUpper();
 			int nCOLUMN_MAX_LENGTH = 0;

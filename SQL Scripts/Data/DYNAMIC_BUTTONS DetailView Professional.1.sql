@@ -664,6 +664,15 @@ if not exists(select * from DYNAMIC_BUTTONS where VIEW_NAME = 'Teams.DetailView'
 end -- if;
 GO
 
+-- 12/31/2025 Paul.  Add Replication. 
+-- delete from DYNAMIC_BUTTONS where VIEW_NAME = 'ReplicationTables.DetailView';
+if not exists(select * from DYNAMIC_BUTTONS where VIEW_NAME = 'ReplicationTables.DetailView' and DELETED = 0) begin -- then
+	exec dbo.spDYNAMIC_BUTTONS_InsButton  'ReplicationTables.DetailView', -1, null, null  , null, null, 'UpdateStats'   , null, 'ReplicationTables.LBL_UPDATE_STATS', 'ReplicationTables.LBL_UPDATE_STATS', null, null, null;
+	exec dbo.spDYNAMIC_BUTTONS_InsButton  'ReplicationTables.DetailView', -1, null, null  , null, null, 'RunSync'       , null, 'ReplicationTables.LBL_RUN_SYNC'    , 'ReplicationTables.LBL_RUN_SYNC'    , null, null, null;
+	exec dbo.spDYNAMIC_BUTTONS_InsButton  'ReplicationTables.DetailView', -1, null, null  , null, null, 'Cancel'        , null, '.LBL_CANCEL_BUTTON_LABEL'          , '.LBL_CANCEL_BUTTON_TITLE'          , null, null, null;
+end -- if;
+GO
+
 
 set nocount off;
 GO

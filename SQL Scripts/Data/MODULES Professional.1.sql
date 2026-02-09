@@ -367,7 +367,10 @@ GO
 exec dbo.spMODULES_InsertOnly null, 'ModulesArchiveRules'   , '.moduleList.ModulesArchiveRules'      , '~/Administration/ModulesArchiveRules/', 1, 0,  0, 0, 0, 0, 0, 1, 'MODULES_ARCHIVE_RULES', 0, 0, 0, 0, 0, 0;
 -- 03/06/2018 Paul.  MailMerge requires access rights so it needs a module record. 
 exec dbo.spMODULES_InsertOnly null, 'MailMerge'             , '.moduleList.MailMerge'                , '~/MailMerge/'                         , 1, 0,  0, 0, 0, 0, 0, 0, null                   , 0, 0, 0, 0, 0, 0;
+-- 12/31/2025 Paul.  Add Replication.
+exec dbo.spMODULES_InsertOnly null, 'ReplicationTables'     , '.moduleList.ReplicationTables'        , '~/Administration/ReplicationTables/'  , 1, 0,  0, 0, 0, 0, 0, 1, 'REPLICATION_TABLES'   , 0, 1, 0, 0, 0, 1;
 GO
+
 
 -- 03/14/2014 Paul.  DUP_CHECH_ENABLED enables duplicate checking. 
 if exists(select * from MODULES where MODULE_NAME = N'Contracts' and DUPLICATE_CHECHING_ENABLED is null) begin -- then

@@ -606,6 +606,12 @@ if not exists (select * from SHORTCUTS where MODULE_NAME = 'ModulesArchiveRules'
 end -- if;
 GO
 
+-- 12/31/2025 Paul.  Add Replication. 
+if not exists (select * from SHORTCUTS where MODULE_NAME = 'ReplicationTables' and DELETED = 0) begin -- then
+	exec dbo.spSHORTCUTS_InsertOnly null, 'ReplicationTables'     , 'ReplicationTables.LNK_REPLICATION_TABLES_LIST', '~/Administration/ReplicationTables/default.aspx'     , 'ModulesArchiveRules.gif'   , 1,  2, 'ReplicationTables'        , 'list';
+end -- if;
+GO
+
 
 set nocount off;
 GO

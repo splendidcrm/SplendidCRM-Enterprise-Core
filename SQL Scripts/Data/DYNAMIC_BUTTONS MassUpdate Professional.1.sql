@@ -175,6 +175,14 @@ if not exists(select * from DYNAMIC_BUTTONS where VIEW_NAME = 'TwitterTracks.Mas
 end -- if;
 GO
 
+-- 12/31/2025 Paul.  Add Replication. 
+-- delete from DYNAMIC_BUTTONS where VIEW_NAME = 'ReplicationTables.MassUpdate';
+if not exists(select * from DYNAMIC_BUTTONS where VIEW_NAME = 'ReplicationTables.MassUpdate' and DELETED = 0) begin -- then
+	print 'DYNAMIC_BUTTONS ReplicationTables MassUpdate';
+	exec dbo.spDYNAMIC_BUTTONS_InsButton    'ReplicationTables.MassUpdate', -1, 'ReplicationTables', 'edit'  , null, null, 'UpdateStats', null, 'ReplicationTables.LBL_UPDATE_STATS', 'ReplicationTables.LBL_UPDATE_STATS', null, 'if ( !ValidateOne() ) return false;', null;
+	exec dbo.spDYNAMIC_BUTTONS_InsButton    'ReplicationTables.MassUpdate', -1, 'ReplicationTables', 'edit'  , null, null, 'RunSync'    , null, 'ReplicationTables.LBL_RUN_SYNC'    , 'ReplicationTables.LBL_RUN_SYNC'    , null, 'if ( !ValidateOne() ) return false;', null;
+end -- if;
+GO
 
 set nocount off;
 GO

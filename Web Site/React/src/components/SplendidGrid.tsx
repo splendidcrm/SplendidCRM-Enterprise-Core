@@ -97,6 +97,8 @@ interface ISplendidGridProps extends RouteComponentProps<any>
 	onComponentComplete?: (MODULE_NAME, RELATED_MODULE, LAYOUT_NAME, data) => void;
 	// 04/10/2022 Paul.  Move Pacific Export to pagination header. 
 	enableExportHeader? : boolean;
+	// 01/03/2026 Paul.  Need a way to use TABLE_NAME as selection key. 
+	SELECTION_FIELD_NAME?   : string;
 }
 
 interface ISplendidGridState
@@ -146,6 +148,8 @@ interface ISplendidGridState
 	EXPORT_FORMAT           : string;
 	EXPORT_RANGE_LIST       : any[];
 	EXPORT_FORMAT_LIST      : any[];
+	// 01/03/2026 Paul.  Need a way to use TABLE_NAME as selection key. 
+	SELECTION_FIELD_NAME    : string;
 }
 
 @observer
@@ -215,6 +219,8 @@ class SplendidGrid extends React.Component<ISplendidGridProps, ISplendidGridStat
 		EXPORT_FORMAT_LIST.push({ DISPLAY_NAME: L10n.Term('Import.LBL_XML'              ), NAME: 'xml'     });
 		EXPORT_FORMAT_LIST.push({ DISPLAY_NAME: L10n.Term('Import.LBL_CUSTOM_CSV'       ), NAME: 'csv'     });
 		EXPORT_FORMAT_LIST.push({ DISPLAY_NAME: L10n.Term('Import.LBL_CUSTOM_TAB'       ), NAME: 'tab'     });
+		// 01/03/2026 Paul.  Need a way to use TABLE_NAME as selection key. 
+		const SELECTION_FIELD_NAME = (props.SELECTION_FIELD_NAME ? props.SELECTION_FIELD_NAME : 'ID');
 		this.state =
 		{
 			layout          : null,
@@ -256,6 +262,9 @@ class SplendidGrid extends React.Component<ISplendidGridProps, ISplendidGridStat
 			EXPORT_FORMAT     ,
 			EXPORT_RANGE_LIST ,
 			EXPORT_FORMAT_LIST,
+			// 01/03/2026 Paul.  Need a way to use TABLE_NAME as selection key. 
+			SELECTION_FIELD_NAME: SELECTION_FIELD_NAME
+
 		};
 	}
 
@@ -476,7 +485,7 @@ class SplendidGrid extends React.Component<ISplendidGridProps, ISplendidGridStat
 
 	private createKeys = (results: Array<any>) =>
 	{
-		const { selectedItems } = this.state;
+		const { selectedItems, SELECTION_FIELD_NAME } = this.state;
 		// 03/02/2021 Paul.  We need to re-calculate the selectedKeys after every submit as the sort may change and the ID_key would then be different. 
 		let selectedKeys = [];
 		if ( results != null )
@@ -495,7 +504,7 @@ class SplendidGrid extends React.Component<ISplendidGridProps, ISplendidGridStat
 				}
 				row.ID_key = this.formatKey(row.ID, i);
 				// 03/02/2021 Paul.  We need to re-calculate the selectedKeys after every submit as the sort may change and the ID_key would then be different. 
-				if ( selectedItems[row.ID] )
+				if ( selectedItems[row[SELECTION_FIELD_NAME]] )
 				{
 					selectedKeys.push(row.ID_key);
 				}
@@ -1984,11 +1993,12 @@ class SplendidGrid extends React.Component<ISplendidGridProps, ISplendidGridStat
 	public _onSelectionChanged = (row, isSelect, rowIndex, e) =>
 	{
 		const { selectionChanged } = this.props;
+		const { SELECTION_FIELD_NAME } = this.state;
 		let { selectedItems, selectedKeys } = this.state;
 		//console.log((new Date()).toISOString() + ' ' + this.constructor.name + '._onSelectionChanged ' + isSelect.toString(), row);
 		if ( isSelect )
 		{
-			selectedItems[row.ID] = true;
+			selectedItems[row[SELECTION_FIELD_NAME]] = true;
 			if ( !selectedKeys.find(x => x == row.ID_key) )
 			{
 				selectedKeys.push(row.ID_key);
@@ -1996,7 +2006,7 @@ class SplendidGrid extends React.Component<ISplendidGridProps, ISplendidGridStat
 		}
 		else
 		{
-			delete selectedItems[row.ID];
+			delete selectedItems[row[SELECTION_FIELD_NAME]];
 			selectedKeys = selectedKeys.filter(x => x !== row.ID_key);
 		}
 		// 03/15/2021 Paul.  selectedKeys only lists items on current page, not total count. 
@@ -2015,7 +2025,7 @@ class SplendidGrid extends React.Component<ISplendidGridProps, ISplendidGridStat
 	private _onBootstrapSelectPage = (isSelect, rows, e) =>
 	{
 		const { selectionChanged } = this.props;
-		const { vwMain } = this.state;
+		const { vwMain, SELECTION_FIELD_NAME } = this.state;
 		let { selectedItems, selectedKeys } = this.state;
 		//console.log((new Date()).toISOString() + ' ' + this.constructor.name + '._onBootstrapSelectPage ' + isSelect.toString(), rows);
 		if ( vwMain != null )
@@ -2025,7 +2035,7 @@ class SplendidGrid extends React.Component<ISplendidGridProps, ISplendidGridStat
 				let row = rows[i];
 				if ( isSelect )
 				{
-					selectedItems[row.ID] = true;
+					selectedItems[row[SELECTION_FIELD_NAME]] = true;
 					if ( !selectedKeys.find(x => x == row.ID_key) )
 					{
 						selectedKeys.push(row.ID_key);
@@ -2033,7 +2043,7 @@ class SplendidGrid extends React.Component<ISplendidGridProps, ISplendidGridStat
 				}
 				else
 				{
-					delete selectedItems[row.ID];
+					delete selectedItems[row[SELECTION_FIELD_NAME]];
 					selectedKeys = selectedKeys.filter(x => x !== row.ID_key);
 				}
 			}
@@ -2053,6 +2063,7 @@ class SplendidGrid extends React.Component<ISplendidGridProps, ISplendidGridStat
 	private _onSelectPage = (e) =>
 	{
 		const { selectionChanged } = this.props;
+		const { SELECTION_FIELD_NAME } = this.state;
 		const { vwMain } = this.state;
 		let { nSelectionKey } = this.state;
 		let { selectedItems, selectedKeys } = this.state;
@@ -2066,7 +2077,7 @@ class SplendidGrid extends React.Component<ISplendidGridProps, ISplendidGridStat
 			for ( let i = 0; i < vwMain.length; i++ )
 			{
 				let row = vwMain[i];
-				selectedItems[row.ID] = true;
+				selectedItems[row[SELECTION_FIELD_NAME]] = true;
 				if ( !selectedKeys.find(x => x == row.ID_key) )
 				{
 					selectedKeys.push(row.ID_key);
@@ -2090,7 +2101,7 @@ class SplendidGrid extends React.Component<ISplendidGridProps, ISplendidGridStat
 	private _onSelectAll = async (e) =>
 	{
 		const { MODULE_NAME, ADMIN_MODE, cbCustomLoad, archiveView, rowRequiredSearch, selectionChanged } = this.props;
-		const { layout, SORT_FIELD, SORT_DIRECTION, SEARCH_FILTER, SEARCH_VALUES, RELATED_MODULE, TABLE_NAME, PRIMARY_FIELD, PRIMARY_ID, TOP, __total } = this.state;
+		const { layout, SORT_FIELD, SORT_DIRECTION, SEARCH_FILTER, SEARCH_VALUES, RELATED_MODULE, TABLE_NAME, PRIMARY_FIELD, PRIMARY_ID, TOP, __total, SELECTION_FIELD_NAME } = this.state;
 		let { nSelectionKey } = this.state;
 		e.preventDefault();
 		try
@@ -2165,7 +2176,7 @@ class SplendidGrid extends React.Component<ISplendidGridProps, ISplendidGridStat
 					{
 						let row = results[i];
 						row.ID_key = this.formatKey(row.ID, i);
-						selectedItems[row.ID] = true;
+						selectedItems[row[SELECTION_FIELD_NAME]] = true;
 						selectedKeys.push(row.ID_key);
 					}
 				}
@@ -2342,14 +2353,14 @@ class SplendidGrid extends React.Component<ISplendidGridProps, ISplendidGridStat
 
 	private isPageSelected = () =>
 	{
-		const { vwMain, selectedItems } = this.state;
+		const { vwMain, selectedItems, SELECTION_FIELD_NAME } = this.state;
 		let pageSelectionCount: number = 0;
 		if ( vwMain != null )
 		{
 			for ( let i = 0; i < vwMain.length; i++ )
 			{
 				let row = vwMain[i];
-				if ( selectedItems[row.ID] )
+				if ( selectedItems[row[SELECTION_FIELD_NAME]] )
 				{
 					pageSelectionCount++;
 				}
@@ -2377,7 +2388,7 @@ class SplendidGrid extends React.Component<ISplendidGridProps, ISplendidGridStat
 	private refPacificSelection = (element) =>
 	{
 		const { enableSelection } = this.props;
-		const { vwMain, selectedItems } = this.state;
+		const { vwMain, selectedItems, SELECTION_FIELD_NAME } = this.state;
 		this.chkPacificSelection = element;
 		if ( this.chkPacificSelection != null && enableSelection )
 		{
@@ -2388,7 +2399,7 @@ class SplendidGrid extends React.Component<ISplendidGridProps, ISplendidGridStat
 				for ( let i = 0; i < vwMain.length; i++ )
 				{
 					let row = vwMain[i];
-					if ( selectedItems[row.ID] )
+					if ( selectedItems[row[SELECTION_FIELD_NAME]] )
 					{
 						pageCount++;
 					}

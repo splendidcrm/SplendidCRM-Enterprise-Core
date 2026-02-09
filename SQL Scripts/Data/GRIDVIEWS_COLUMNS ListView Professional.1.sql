@@ -1238,6 +1238,29 @@ if not exists(select * from GRIDVIEWS_COLUMNS where GRID_NAME = 'MailMerge.ListV
 end -- if;
 GO
 
+-- 12/31/2025 Paul.  Add Replication. 
+-- delete from GRIDVIEWS_COLUMNS where GRID_NAME = 'ReplicationTables.ListView';
+if not exists(select * from GRIDVIEWS_COLUMNS where GRID_NAME = 'ReplicationTables.ListView' and DELETED = 0) begin -- then
+	print 'GRIDVIEWS_COLUMNS ReplicationTables.ListView';
+	exec dbo.spGRIDVIEWS_InsertOnly           'ReplicationTables.ListView', 'ReplicationTables', 'vwREPLICATION_TABLES';
+	exec dbo.spGRIDVIEWS_COLUMNS_InsHyperLink 'ReplicationTables.ListView',  1, 'ReplicationTables.LBL_LIST_TABLE_NAME'          , 'TABLE_NAME'          , 'TABLE_NAME'          , '10%', 'listViewTdLinkS1', 'ID TABLE_NAME', '~/Administration/ReplicationTables/view.aspx?ID={0}&TABLE_NAME={1}', null, 'ReplicationTables', null;
+	exec dbo.spGRIDVIEWS_COLUMNS_InsBound     'ReplicationTables.ListView',  2, 'ReplicationTables.LBL_LIST_LOCAL_COUNT'         , 'LOCAL_COUNT'         , 'LOCAL_COUNT'         , '10%';
+	exec dbo.spGRIDVIEWS_COLUMNS_InsBound     'ReplicationTables.ListView',  3, 'ReplicationTables.LBL_LIST_LOCAL_LAST_MODIFIED' , 'LOCAL_LAST_MODIFIED' , 'LOCAL_LAST_MODIFIED' , '10%';
+	exec dbo.spGRIDVIEWS_COLUMNS_InsBound     'ReplicationTables.ListView',  4, 'ReplicationTables.LBL_LIST_REMOTE_COUNT'        , 'REMOTE_COUNT'        , 'REMOTE_COUNT'        , '10%';
+	exec dbo.spGRIDVIEWS_COLUMNS_InsBound     'ReplicationTables.ListView',  5, 'ReplicationTables.LBL_LIST_REMOTE_LAST_MODIFIED', 'REMOTE_LAST_MODIFIED', 'REMOTE_LAST_MODIFIED', '10%';
+	exec dbo.spGRIDVIEWS_COLUMNS_InsBoundList 'ReplicationTables.ListView',  6, 'ReplicationTables.LBL_LIST_STATUS'              , 'STATUS'              , 'STATUS'              , '10%', 'replication_status_dom';
+	exec dbo.spGRIDVIEWS_COLUMNS_InsBound     'ReplicationTables.ListView',  7, 'ReplicationTables.LBL_LIST_PENDING_COUNT'       , 'PENDING_COUNT'       , 'PENDING_COUNT'       , '10%';
+	exec dbo.spGRIDVIEWS_COLUMNS_InsBound     'ReplicationTables.ListView',  8, 'ReplicationTables.LBL_LIST_LAST_ERROR'          , 'LAST_ERROR'          , 'LAST_ERROR'          , '20%';
+
+	exec dbo.spGRIDVIEWS_COLUMNS_UpdateFormat null, 'ReplicationTables.ListView',  'LOCAL_COUNT'  , '{0:N0}';
+	exec dbo.spGRIDVIEWS_COLUMNS_UpdateFormat null, 'ReplicationTables.ListView',  'REMOTE_COUNT' , '{0:N0}';
+	exec dbo.spGRIDVIEWS_COLUMNS_UpdateFormat null, 'ReplicationTables.ListView',  'PENDING_COUNT', '{0:N0}';
+	exec dbo.spGRIDVIEWS_COLUMNS_UpdateStyle  null, 'ReplicationTables.ListView', 2, null, null, 'right', null, null;
+	exec dbo.spGRIDVIEWS_COLUMNS_UpdateStyle  null, 'ReplicationTables.ListView', 4, null, null, 'right', null, null;
+	exec dbo.spGRIDVIEWS_COLUMNS_UpdateStyle  null, 'ReplicationTables.ListView', 7, null, null, 'right', null, null;
+end -- if;
+GO
+
 
 set nocount off;
 GO

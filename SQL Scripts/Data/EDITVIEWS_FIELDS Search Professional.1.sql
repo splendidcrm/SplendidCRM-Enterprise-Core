@@ -984,6 +984,16 @@ if not exists(select * from EDITVIEWS_FIELDS where EDIT_NAME = 'Exchange.SearchB
 end -- if;
 GO
 
+-- 12/31/2025 Paul.  Add Replication. 
+if not exists(select * from EDITVIEWS_FIELDS where EDIT_NAME = 'ReplicationTables.SearchBasic' and DELETED = 0) begin -- then
+	print 'EDITVIEWS_FIELDS ReplicationTables.SearchBasic';
+	exec dbo.spEDITVIEWS_InsertOnly             'ReplicationTables.SearchBasic', 'ReplicationTables', 'vwREPLICATION_TABLES', '15%', '35%', 2;
+	exec dbo.spEDITVIEWS_FIELDS_InsBound        'ReplicationTables.SearchBasic',  0, 'ReplicationTables.LBL_TABLE_NAME'      , 'TABLE_NAME'             , 0, null, 150, 25, null;
+	exec dbo.spEDITVIEWS_FIELDS_InsBoundList    'ReplicationTables.SearchBasic',  1, 'ReplicationTables.LBL_STATUS'          , 'STATUS'                 , 0, null, 'replication_status_dom', null, 3;
+	exec dbo.spEDITVIEWS_FIELDS_InsControl      'ReplicationTables.SearchBasic',  2, 'ReplicationTables.LBL_IS_PENDING'      , 'IS_PENDING'             , 0, null, 'CheckBox'    , null, null, null;
+end -- if;
+GO
+
 
 set nocount off;
 GO

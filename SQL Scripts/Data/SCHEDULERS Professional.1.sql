@@ -15,6 +15,8 @@ exec dbo.spSCHEDULERS_InsertOnly null, N'Sync with Google Apps' , N'function::po
 exec dbo.spSCHEDULERS_InsertOnly null, N'Sync with Apple iCloud', N'function::pollICloudSync'  , null, null, N'*::*::*::*::*', null, null, N'Inactive', 0;
 -- 02/17/2018 Paul.  ModulesArchiveRules module to Professional. 
 exec dbo.spSCHEDULERS_InsertOnly null, N'Run all Archive Rules' , N'function::RunAllArchiveRules', null, null, N'0::4::1::*::*', null, null, N'Inactive', 0;
+-- 12/31/2025 Paul.  Add Replication. 
+exec dbo.spSCHEDULERS_InsertOnly null, N'Run all Archive Rules' , N'function::RunReplication'    , null, null, N'*::*::*::*::*', null, null, N'Inactive', 0;
 GO
 
 set nocount off;

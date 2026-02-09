@@ -287,6 +287,8 @@ end -- if;
 GO
 
 exec dbo.spSYSTEM_REST_TABLES_InsertOnly null, 'vwACCOUNTS_CREDIT_CARDS'         , 'vwACCOUNTS_CREDIT_CARDS'         , 'Accounts'                 , 'CreditCards'              , 0, null, 0, 0, null, 1, 'ACCOUNT_ID';
+-- 12/31/2025 Paul.  Add Replication. 
+exec dbo.spSYSTEM_REST_TABLES_InsertOnly null, 'REPLICATION_TABLES'              , 'vwREPLICATION_TABLES'            , 'ReplicationTables'        , null                       , 0, null, 1, 0, null, 0, null;
 GO
 
 set nocount off;
